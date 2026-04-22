@@ -3,6 +3,7 @@
 **/bin/
 **/obj/
 **/dist/
+**/.vite/
 **/publish/
 **/_build*/
 **/out/
