@@ -1,0 +1,37 @@
+# Dependencies & build output
+**/node_modules/
+**/bin/
+**/obj/
+**/dist/
+**/publish/
+**/_build*/
+**/out/
+
+# .NET / VS
+**/.vs/
+*.user
+*.suo
+*.cache
+**/TestResults/
+
+# Logs & temp
+*.log
+*.tmp
+**/errors.json
+
+# Environment (secrets — never commit)
+.env
+.env.development
+.env.local
+.env.*.local
+**/.env
+**/.env.development
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+
+# Frontend (root project keeps recyclehub-frontend/.gitignore behavior via nested ignores)
+# package locks should be committed — not ignored
