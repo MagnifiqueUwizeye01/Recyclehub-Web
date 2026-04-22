@@ -1,0 +1,47 @@
+// Route path constants
+export const ROUTES = {
+  HOME: '/',
+  LOGIN: '/login',
+  REGISTER: '/register',
+  FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password',
+  MARKETPLACE_PUBLIC: '/',
+
+  BUYER_DASHBOARD: '/buyer/dashboard',
+  BUYER_MARKETPLACE: '/buyer/marketplace',
+  BUYER_MATERIAL: '/buyer/materials/:id',
+  BUYER_ORDERS: '/buyer/orders',
+  BUYER_ORDER_DETAIL: '/buyer/orders/:id',
+  BUYER_PAYMENT: '/buyer/payment/:orderId',
+  BUYER_SMARTSWAP: '/buyer/smartswap',
+  BUYER_REVIEWS: '/buyer/reviews',
+
+  SELLER_DASHBOARD: '/seller/dashboard',
+  SELLER_INVENTORY: '/seller/inventory',
+  SELLER_ADD_MATERIAL: '/seller/materials/add',
+  SELLER_EDIT_MATERIAL: '/seller/materials/:id/edit',
+  SELLER_ORDERS: '/seller/orders',
+  SELLER_ORDER_DETAIL: '/seller/orders/:id',
+  SELLER_ANALYTICS: '/seller/analytics',
+
+  ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_USERS: '/admin/users',
+  ADMIN_SELLERS: '/admin/sellers',
+  ADMIN_BUYERS: '/admin/buyers',
+  ADMIN_LISTINGS: '/admin/listings',
+  ADMIN_ORDERS: '/admin/orders',
+  ADMIN_PAYMENTS: '/admin/payments',
+  ADMIN_REVIEWS: '/admin/reviews',
+  ADMIN_ANALYTICS: '/admin/analytics',
+  ADMIN_CONFIG: '/admin/config',
+
+  PROFILE: '/profile',
+  SETTINGS: '/settings',
+  CHANGE_PASSWORD: '/change-password',
+  MESSAGES: '/messages',
+  MESSAGES_USER: '/messages/:userId',
+  NOTIFICATIONS: '/notifications',
+
+  UNAUTHORIZED: '/unauthorized',
+  NOT_FOUND: '*',
+};
