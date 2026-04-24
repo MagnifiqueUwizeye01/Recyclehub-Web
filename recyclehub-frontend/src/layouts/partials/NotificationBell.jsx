@@ -23,10 +23,19 @@ export default function NotificationBell({ variant = 'light' }) {
     setOpen(false);
   };
 
+  const handleToggle = () => {
+    const opening = !open;
+    setOpen(opening);
+    // Auto-mark all unread notifications as read the moment the dropdown opens
+    if (opening && unreadCount > 0) {
+      markAllRead();
+    }
+  };
+
   return (
     <div className="relative" ref={ref}>
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={handleToggle}
         className={
           isDark
             ? 'relative p-2 rounded-lg text-emerald-200/90 hover:bg-white/10 hover:text-white transition-colors'

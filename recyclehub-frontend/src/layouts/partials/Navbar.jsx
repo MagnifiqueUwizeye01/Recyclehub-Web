@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { Recycle, Search, MessageSquare, Menu, ArrowRight, Loader2 } from 'lucide-react';
+import { Recycle, Search, MessageSquare, Menu, ArrowRight, Loader2, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { getDashboardPath } from '../../utils/roleGuard';
 import { useMessages } from '../../hooks/useMessages';
 import UserMenu from './UserMenu';
 import NotificationBell from './NotificationBell';
@@ -11,7 +12,8 @@ import { getMaterials } from '../../api/materials.api';
  * @param {'inline' | 'fixed'} variant — inline: inside PublicLayout sticky stack; fixed: dashboard top bar
  */
 export default function Navbar({ onSidebarToggle, variant = 'fixed' }) {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, loading: authLoading, token: authToken, clearSession, refreshSession } = useAuth();
+  const sessionPending = authLoading && !!authToken;
   const { unreadMessages } = useMessages();
   const location = useLocation();
   const navigate = useNavigate();
@@ -40,6 +42,12 @@ export default function Navbar({ onSidebarToggle, variant = 'fixed' }) {
     setQ(fromUrl);
     setDebouncedQ(fromUrl.trim());
   }, [location.pathname, searchParams]);
+
+  // Public home: always re-check JWT so the bar matches server (logout elsewhere, expiry, etc.).
+  useEffect(() => {
+    if (location.pathname !== '/') return;
+    refreshSession?.();
+  }, [location.pathname, refreshSession]);
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedQ(q.trim()), 280);
@@ -267,9 +275,54 @@ export default function Navbar({ onSidebarToggle, variant = 'fixed' }) {
             </form>
           </div>
 
-          {/* Actions */}
+          {/* Actions — marketing home (/) always looks like the public browse experience */}
           <div className="flex items-center justify-end gap-2 sm:gap-3 shrink-0 justify-self-end">
-            {isAuthenticated ? (
+            {sessionPending ? (
+              <div
+                className={`flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium ${
+                  isInline ? 'text-emerald-200/90' : 'text-hub-muted'
+                }`}
+                aria-live="polite"
+              >
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+                <span className="hidden sm:inline">Checking session…</span>
+              </div>
+            ) : isPublicHome ? (
+              isAuthenticated && user ? (
+                <>
+                  <Link
+                    to={getDashboardPath(user.role)}
+                    className="inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-white/20"
+                  >
+                    <LayoutDashboard size={16} strokeWidth={2} aria-hidden />
+                    <span className="hidden sm:inline">Workspace</span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => clearSession()}
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-emerald-100/95 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="hidden sm:inline text-sm font-medium px-2 py-1.5 rounded-lg text-emerald-100/95 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50"
+                  >
+                    Create account
+                    <ArrowRight size={15} strokeWidth={2.25} className="opacity-90" />
+                  </Link>
+                </>
+              )
+            ) : isAuthenticated ? (
               <>
                 <div
                   className={`flex items-center gap-0.5 pr-2 sm:pr-3 sm:border-r ${
