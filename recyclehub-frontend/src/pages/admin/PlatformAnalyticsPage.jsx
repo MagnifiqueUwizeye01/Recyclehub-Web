@@ -1,20 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { BarChart3, ShoppingCart, Wallet } from 'lucide-react';
 import AdminLayout from '../../layouts/AdminLayout';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import DashboardStatCard from '../../components/ui/DashboardStatCard';
+import PageLoadingCard from '../../components/ui/PageLoadingCard';
 import { getAllOrders } from '../../api/orders.api';
 import { getAllPayments } from '../../api/payments.api';
 import { formatRWF } from '../../utils/formatCurrency';
 import { summarizePlatformAnalytics } from '../../utils/gemini';
 import { exportToPDF, exportToExcel } from '../../utils/exportUtils';
 import { formatDate } from '../../utils/formatDate';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
+import SimpleBarChart from '../../components/ui/SimpleBarChart';
 
 const SAMPLE_PAGE_SIZE = 500;
 
@@ -169,28 +165,31 @@ export default function PlatformAnalyticsPage() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-2xl font-semibold text-gray-900">Platform analytics</h1>
-          {!loading && (
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => runExport('pdf')}
-                className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Export PDF
-              </button>
-              <button
-                type="button"
-                onClick={() => runExport('excel')}
-                className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800 hover:bg-emerald-100"
-              >
-                Export Excel
-              </button>
-            </div>
-          )}
-        </div>
+      <div className="w-full space-y-8">
+        <ModernPageHeader
+          title="Platform analytics"
+          description="Orders and payments sample with optional date filters and exports."
+          actions={
+            !loading ? (
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => runExport('pdf')}
+                  className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Export PDF
+                </button>
+                <button
+                  type="button"
+                  onClick={() => runExport('excel')}
+                  className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800 hover:bg-emerald-100"
+                >
+                  Export Excel
+                </button>
+              </div>
+            ) : null
+          }
+        />
 
         {!loading && (
           <div className="flex flex-wrap items-end gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
@@ -229,49 +228,45 @@ export default function PlatformAnalyticsPage() {
           </div>
         )}
 
-        {loading && (
-          <div className="rounded-2xl border border-emerald-100 bg-white p-6 text-sm text-gray-600">Loading analytics...</div>
-        )}
+        {loading && <PageLoadingCard message="Loading analytics…" />}
         {!loading && (
           <>
-            <div className="grid gap-4 md:grid-cols-3">
-              <Metric label="Orders (filtered sample)" value={filteredOrders.length} />
-              <Metric label="Successful payments (filtered)" value={successfulPayments.length} />
-              <Metric label="Revenue (filtered)" value={formatRWF(revenue)} />
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              <DashboardStatCard
+                icon={ShoppingCart}
+                label="Orders (filtered sample)"
+                value={String(filteredOrders.length)}
+                badge="Dataset"
+                tone="emerald"
+              />
+              <DashboardStatCard
+                icon={Wallet}
+                label="Successful payments (filtered)"
+                value={String(successfulPayments.length)}
+                badge="Settled"
+                tone="blue"
+              />
+              <DashboardStatCard
+                icon={BarChart3}
+                label="Revenue (filtered)"
+                value={formatRWF(revenue)}
+                badge="RWF"
+                tone="violet"
+              />
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2">
-              <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-                <h2 className="text-sm font-semibold text-gray-900 mb-4">Orders by status</h2>
-                <div className="h-[260px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={orderStatusChart} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-25} textAnchor="end" height={60} />
-                      <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
-                      <Tooltip />
-                      <Bar dataKey="count" name="Orders" fill="#059669" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
+              <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                <h2 className="mb-4 text-sm font-semibold text-gray-900">Orders by status</h2>
+                <SimpleBarChart data={orderStatusChart} dataKey="count" nameKey="name" />
               </div>
-              <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-                <h2 className="text-sm font-semibold text-gray-900 mb-4">Payments by status</h2>
-                <div className="h-[260px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={paymentStatusChart} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-25} textAnchor="end" height={60} />
-                      <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
-                      <Tooltip />
-                      <Bar dataKey="count" name="Payments" fill="#0d9488" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
+              <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                <h2 className="mb-4 text-sm font-semibold text-gray-900">Payments by status</h2>
+                <SimpleBarChart data={paymentStatusChart} dataKey="count" nameKey="name" barClassName="bg-teal-600" />
               </div>
             </div>
 
-            <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm overflow-x-auto">
+            <div className="overflow-x-auto rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
               <h2 className="text-sm font-semibold text-gray-900 mb-3">Sample orders (table)</h2>
               <table className="min-w-full text-sm text-left">
                 <thead>
@@ -310,7 +305,7 @@ export default function PlatformAnalyticsPage() {
               )}
             </div>
 
-            <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
               <h2 className="text-sm font-semibold text-gray-900">Insight (Gemini)</h2>
               <p className="mt-1 text-xs text-gray-500">
                 Optional summary. Set <code className="rounded bg-gray-100 px-1">VITE_GEMINI_API_KEY</code> in your frontend env
@@ -329,14 +324,5 @@ export default function PlatformAnalyticsPage() {
         )}
       </div>
     </AdminLayout>
-  );
-}
-
-function Metric({ label, value }) {
-  return (
-    <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-      <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-gray-900">{value}</p>
-    </div>
   );
 }
