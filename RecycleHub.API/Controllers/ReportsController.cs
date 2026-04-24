@@ -31,6 +31,13 @@ namespace RecycleHub.API.Controllers
         public async Task<IActionResult> GetAll([FromQuery] ReportFilterDto filter)
             => Ok(await _service.GetReportsAsync(filter));
 
+        [HttpGet("my")]
+        public async Task<IActionResult> GetMine([FromQuery] ReportFilterDto filter)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            return Ok(await _service.GetMyReportsAsync(userId, filter));
+        }
+
         [HttpGet("pending-count")]
         [Authorize(Policy = AppConstants.PolicyAdminOnly)]
         public async Task<IActionResult> PendingCount()
