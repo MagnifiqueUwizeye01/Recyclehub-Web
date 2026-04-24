@@ -1,17 +1,18 @@
 import { useEffect, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { SIGNALR_HUB_URL } from '../config/env';
+import { getAuthToken } from '../utils/authStorage';
 
 export const useSignalR = ({ onNotification, onMessage, onOrderChanged }) => {
   const connectionRef = useRef(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('rh_token');
+    const token = getAuthToken();
     if (!token) return;
 
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(SIGNALR_HUB_URL, {
-        accessTokenFactory: () => localStorage.getItem('rh_token'),
+        accessTokenFactory: () => getAuthToken() || '',
       })
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Warning)
