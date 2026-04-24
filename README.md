@@ -134,5 +134,5 @@ Remote: https://github.com/MagnifiqueUwizeye01/Recyclehub
 
 Feature work is often done on team branches; main is the integrated product line. Use pull requests and clear commit messages so each collaborator's contribution is visible in history (as expected in academic and professional reviews).
 
-<div align="center"> <sub>Built with ♻️ for a circular economy</sub> </div> ```
+Built with ♻️ for a circular economy ```
 
