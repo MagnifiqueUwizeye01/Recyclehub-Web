@@ -30,7 +30,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ---
 
-## 📋 What the system does (in plain language)
+## What the system does (in plain language)
 
 | Who | What they get |
 |:----|:---------------|
@@ -104,7 +104,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ---
 
-## 🚀 Run locally
+##  Run locally
 
 **Terminal 1 — API**
 
