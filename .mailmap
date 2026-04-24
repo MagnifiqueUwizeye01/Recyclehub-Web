@@ -1,0 +1,5 @@
+# Canonical author: UwizeyeMagnifique (spelling: Uw-i-z-e-y-e, not Uwiizeye with double "i").
+# For any legacy clone that still has the old spelling in commit metadata, Git maps it when using mailmap.
+# https://git-scm.com/docs/gitmailmap
+#
+UwizeyeMagnifique <uwizeyemagnifique@gmail.com> UwiizeyeMagnifique <uwizeyemagnifique@gmail.com>
