@@ -9,7 +9,7 @@ import { getOrderById, confirmOrder, rejectOrder, shipOrder } from '../../api/or
 import { unwrapApiPayload } from '../../utils/authMapper';
 import { formatRWF } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/formatDate';
-import { ArrowLeft, Check, Truck, MessageSquare } from 'lucide-react';
+import { Check, Truck, MessageSquare } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function SellerOrderDetailPage() {
@@ -85,35 +85,20 @@ export default function SellerOrderDetailPage() {
 
   return (
     <SellerLayout>
-      <div className="max-w-3xl mx-auto animate-fade-in space-y-6 pb-12">
-        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1 text-gray-600 hover:text-emerald-700 font-medium"
-          >
-            <ArrowLeft size={16} /> Back
-          </button>
-          <span className="text-gray-300">|</span>
-          <Link to="/seller/orders" className="hover:text-emerald-600">
-            All orders
-          </Link>
-        </div>
-
-        <div className="flex items-center gap-3 flex-wrap">
-          <button
-            type="button"
-            onClick={() => navigate('/seller/orders')}
-            className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors"
-            aria-label="Back to list"
-          >
-            <ArrowLeft size={18} />
-          </button>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-semibold text-gray-900">Order #{order.id}</h1>
-            <p className="text-gray-500 text-sm">{formatDate(order.createdAt)}</p>
+      <div className="mx-auto max-w-3xl animate-fade-in space-y-8 pb-12">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent md:text-3xl">
+              Order #{order.id}
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">{formatDate(order.createdAt)}</p>
           </div>
-          <StatusChip status={order.status} className="shrink-0" />
+          <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:items-center">
+            <StatusChip status={order.status} />
+            <Link to="/seller/orders" className="text-sm font-medium text-emerald-600 hover:text-emerald-700">
+              All orders
+            </Link>
+          </div>
         </div>
 
         <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
