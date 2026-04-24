@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import PageLoadingCard from '../../components/ui/PageLoadingCard';
 import StatusChip from '../../components/ui/StatusChip';
 import Pagination from '../../components/ui/Pagination';
 import { getUsers, updateUserStatus } from '../../api/users.api';
@@ -62,13 +64,13 @@ export default function BuyerManagementPage() {
 
   return (
     <AdminLayout>
-      <div className="max-w-6xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Buyers</h1>
-          <p className="text-sm text-gray-500">Buyer accounts and company profiles</p>
-        </div>
+      <div className="mx-auto w-full max-w-6xl space-y-8">
+        <ModernPageHeader
+          title="Buyers"
+          description="Buyer accounts and company profiles. Search and manage access."
+        />
 
-        <form onSubmit={handleSearch} className="flex flex-wrap gap-3">
+        <form onSubmit={handleSearch} className="flex flex-wrap gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
           <div className="relative flex-1 min-w-[200px]">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
@@ -84,7 +86,7 @@ export default function BuyerManagementPage() {
         </form>
 
         {loading ? (
-          <div className="rounded-2xl border border-gray-100 bg-white p-8 text-sm text-gray-500">Loading buyers…</div>
+          <PageLoadingCard message="Loading buyers…" />
         ) : (
           <div className="overflow-x-auto rounded-2xl border border-gray-100 bg-white shadow-sm">
             <table className="min-w-full text-sm">
