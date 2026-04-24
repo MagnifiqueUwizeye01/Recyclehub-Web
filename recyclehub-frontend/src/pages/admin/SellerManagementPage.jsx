@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
 import ErrorState from '../../components/ui/ErrorState';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import PageLoadingCard from '../../components/ui/PageLoadingCard';
 import { getSellerProfiles, verifySellerProfile } from '../../api/sellerProfiles.api';
 import { resolveUploadedFileUrl } from '../../utils/assetUrl';
 import { sendMessage } from '../../api/messages.api';
@@ -73,8 +75,11 @@ export default function SellerManagementPage() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Seller verification</h1>
+      <div className="w-full space-y-8">
+        <ModernPageHeader
+          title="Seller verification"
+          description="Review documents, approve verified recyclers, or reject with a message."
+        />
 
         <div className="flex flex-wrap gap-2">
           {TABS.map((t) => (
@@ -85,8 +90,10 @@ export default function SellerManagementPage() {
                 setStatusFilter(t);
                 setPage(1);
               }}
-              className={`px-4 py-2 rounded-xl text-sm font-medium ${
-                statusFilter === t ? 'bg-emerald-500 text-white' : 'bg-white border border-gray-200 text-gray-700'
+              className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
+                statusFilter === t
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'border border-gray-200 bg-white text-gray-700 hover:border-emerald-200 hover:bg-gray-50'
               }`}
             >
               {t}
@@ -94,9 +101,7 @@ export default function SellerManagementPage() {
           ))}
         </div>
 
-        {loading && (
-          <div className="rounded-2xl border border-emerald-100 bg-white p-6 text-sm text-gray-600">Loading sellers...</div>
-        )}
+        {loading && <PageLoadingCard message="Loading sellers…" />}
         {!loading && error && <ErrorState title="Unable to load sellers" message={error} onRetry={load} />}
         {!loading && !error && (
           <div className="overflow-x-auto rounded-2xl border border-gray-100 bg-white shadow-sm">
