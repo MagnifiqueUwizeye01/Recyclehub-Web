@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../config/env';
+import { getAuthToken, clearAuthSession } from '../utils/authStorage';
 
 const api = axios.create({
   baseURL: API_BASE_URL || 'http://localhost:5123/api',
@@ -7,9 +8,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('rh_token');
+  const token = getAuthToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
-  // FormData: must not send application/json or a manual multipart boundary — browser sets Content-Type + boundary.
   if (config.data instanceof FormData && config.headers) {
     if (typeof config.headers.delete === 'function') {
       config.headers.delete('Content-Type');
@@ -29,14 +29,14 @@ api.interceptors.response.use(
         path.includes('/auth/login') ||
         path.includes('/auth/register') ||
         path.includes('/auth/refresh');
-      if (!isAuthAttempt) {
-        localStorage.removeItem('rh_token');
-        localStorage.removeItem('rh_user');
+      const isSessionProbe = path.includes('/auth/me');
+      if (!isAuthAttempt && !isSessionProbe) {
+        clearAuthSession();
         window.location.href = '/login';
       }
     }
     return Promise.reject(err);
-  }
+  },
 );
 
 export default api;
