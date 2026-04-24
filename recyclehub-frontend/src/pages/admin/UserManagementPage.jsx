@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import PageLoadingCard from '../../components/ui/PageLoadingCard';
 import StatusChip from '../../components/ui/StatusChip';
 import Pagination from '../../components/ui/Pagination';
 import { createUser, deleteUser, getUserById, getUsers, updateUser, updateUserStatus } from '../../api/users.api';
@@ -300,47 +302,48 @@ export default function UserManagementPage() {
 
   return (
     <AdminLayout>
-      <div className="max-w-6xl mx-auto space-y-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900">User management</h1>
-            <p className="text-sm text-gray-500">Directory of all platform accounts</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={openCreate}
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 text-white px-4 py-2 text-sm font-semibold shadow-sm hover:bg-emerald-700"
-            >
-              <UserPlus size={18} />
-              Add user
-            </button>
-            <div className="relative">
+      <div className="mx-auto w-full max-w-6xl space-y-8">
+        <ModernPageHeader
+          title="User management"
+          description="Directory of all platform accounts"
+          actions={
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
-                onClick={() => setExportOpen((o) => !o)}
-                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50"
+                onClick={openCreate}
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
               >
-                Export <ChevronDown size={16} />
+                <UserPlus size={18} />
+                Add user
               </button>
-              {exportOpen && (
-                <>
-                  <button type="button" className="fixed inset-0 z-10 cursor-default" aria-label="Close menu" onClick={() => setExportOpen(false)} />
-                  <div className="absolute right-0 mt-1 w-48 rounded-xl border border-gray-200 bg-white shadow-lg z-20 py-1">
-                    <button type="button" className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => runExport('pdf')}>
-                      Export as PDF
-                    </button>
-                    <button type="button" className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => runExport('excel')}>
-                      Export as Excel
-                    </button>
-                  </div>
-                </>
-              )}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setExportOpen((o) => !o)}
+                  className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50"
+                >
+                  Export <ChevronDown size={16} />
+                </button>
+                {exportOpen && (
+                  <>
+                    <button type="button" className="fixed inset-0 z-10 cursor-default" aria-label="Close menu" onClick={() => setExportOpen(false)} />
+                    <div className="absolute right-0 z-20 mt-1 w-48 rounded-xl border border-gray-200 bg-white py-1 shadow-lg">
+                      <button type="button" className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-50" onClick={() => runExport('pdf')}>
+                        Export as PDF
+                      </button>
+                      <button type="button" className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-50" onClick={() => runExport('excel')}>
+                        Export as Excel
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        </div>
+          }
+        />
 
-        <div className="flex flex-wrap gap-3 items-end">
+        <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+        <div className="flex flex-wrap items-end gap-3">
           <div className="relative flex-1 min-w-[200px]">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
@@ -376,11 +379,12 @@ export default function UserManagementPage() {
             <option value="Pending">Pending</option>
             <option value="Suspended">Suspended</option>
           </select>
-          <p className="text-xs text-gray-400 pb-2 hidden sm:block">Results update as you type</p>
+          <p className="hidden pb-2 text-xs text-gray-400 sm:block">Results update as you type</p>
+        </div>
         </div>
 
         {loading ? (
-          <div className="rounded-2xl border border-gray-100 bg-white p-8 text-sm text-gray-500">Loading users…</div>
+          <PageLoadingCard message="Loading users…" />
         ) : (
           <div className="overflow-x-auto rounded-2xl border border-gray-100 bg-white shadow-sm">
             <table className="min-w-full text-sm">
