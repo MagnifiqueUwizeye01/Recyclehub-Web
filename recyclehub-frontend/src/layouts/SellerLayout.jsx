@@ -8,6 +8,7 @@ import {
   Bell,
   User,
   Settings,
+  Flag,
 } from 'lucide-react';
 import Sidebar from './partials/Sidebar';
 import DashboardFooter from './partials/DashboardFooter';
@@ -18,6 +19,7 @@ const navItems = [
   { path: '/seller/inventory', label: 'My Listings', icon: <Package size={16} /> },
   { path: '/seller/orders', label: 'Orders', icon: <ShoppingCart size={16} /> },
   { path: '/seller/analytics', label: 'Analytics', icon: <BarChart3 size={16} /> },
+  { path: '/seller/reports',   label: 'Reports',   icon: <Flag size={16} /> },
   { path: '/messages', label: 'Messages', icon: <MessageSquare size={16} /> },
   { path: '/notifications', label: 'Notifications', icon: <Bell size={16} /> },
   { path: '/profile', label: 'Profile', icon: <User size={16} /> },
