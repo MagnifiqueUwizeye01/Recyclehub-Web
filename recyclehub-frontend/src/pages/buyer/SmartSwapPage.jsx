@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import BuyerLayout from '../../layouts/BuyerLayout';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import PageLoadingCard from '../../components/ui/PageLoadingCard';
 import SmartSwapCard from '../../components/features/SmartSwapCard';
 import ErrorState from '../../components/ui/ErrorState';
 import { useSmartSwap } from '../../hooks/useSmartSwap';
@@ -23,12 +25,17 @@ export default function SmartSwapPage() {
 
   return (
     <BuyerLayout>
-      <div className="space-y-6">
-        <h1 className="text-2xl font-semibold text-gray-900">SmartSwap</h1>
-        {loading && <div className="rounded-2xl border border-emerald-100 bg-white p-6 text-sm text-gray-600">Loading recommendations...</div>}
-        {!loading && error && <ErrorState title="Unable to Load SmartSwap" message={error} onRetry={fetchBuyerMatches} />}
+      <div className="w-full space-y-8">
+        <ModernPageHeader
+          title="SmartSwap"
+          description="Exchange-style matches based on your interests and seller offers."
+        />
+        {loading && <PageLoadingCard message="Loading recommendations…" />}
+        {!loading && error && <ErrorState title="Unable to load SmartSwap" message={error} onRetry={fetchBuyerMatches} />}
         {!loading && !error && (!Array.isArray(matches) || matches.length === 0) && (
-          <div className="rounded-2xl border border-emerald-100 bg-white p-6 text-sm text-gray-600">No recommendations available right now.</div>
+          <div className="rounded-2xl border border-gray-100 bg-white p-10 text-center text-sm text-gray-500 shadow-sm">
+            No recommendations available right now.
+          </div>
         )}
         {!loading && !error && Array.isArray(matches) && matches.length > 0 && (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
