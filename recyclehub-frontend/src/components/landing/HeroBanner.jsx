@@ -91,7 +91,7 @@ export default function HeroBanner() {
               className="btn-primary"
               state={slide.ctaRole ? { role: slide.ctaRole } : undefined}
             >
-              {slide.cta} →
+              {slide.cta}
             </Link>
             {slide.cta2 && (
               <Link
