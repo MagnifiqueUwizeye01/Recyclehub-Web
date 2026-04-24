@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BuyerLayout from '../../layouts/BuyerLayout';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
 import Table from '../../components/ui/Table';
 import StatusChip from '../../components/ui/StatusChip';
 import Pagination from '../../components/ui/Pagination';
@@ -10,11 +11,18 @@ import { useAuth } from '../../hooks/useAuth';
 import { useOrders } from '../../hooks/useOrders';
 import { formatRWF } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/formatDate';
-import { Eye, X, MessageSquare, ChevronDown } from 'lucide-react';
+import { Eye, X, MessageSquare, ChevronDown, Package, Clock, Truck, CheckCircle, XCircle, Activity } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { exportToPDF, exportToExcel } from '../../utils/exportUtils';
 
-const TABS = ['All', 'Pending', 'Accepted', 'Shipped', 'Delivered', 'Cancelled'];
+const TABS = [
+  { value: 'All',       label: 'All',       icon: Activity },
+  { value: 'Pending',   label: 'Pending',   icon: Clock },
+  { value: 'Accepted',  label: 'Accepted',  icon: Package },
+  { value: 'Shipped',   label: 'Shipped',   icon: Truck },
+  { value: 'Delivered', label: 'Delivered', icon: CheckCircle },
+  { value: 'Cancelled', label: 'Cancelled', icon: XCircle },
+];
 
 export default function OrdersPage() {
   const { user } = useAuth();
@@ -51,6 +59,7 @@ export default function OrdersPage() {
   useEffect(() => {
     if (!user) return;
     fetchBuyerOrders({ status: tab === 'All' ? undefined : tab, pageNumber: page, pageSize: 10 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, tab, page]);
 
   const handleCancel = async () => {
@@ -89,30 +98,38 @@ export default function OrdersPage() {
 
   return (
     <BuyerLayout>
-      <div className="space-y-5 animate-fade-in">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-2xl font-display font-bold text-hub-text">My Orders</h1>
-          <div className="relative group">
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 rounded-xl border border-hub-border bg-white px-4 py-2 text-sm font-medium text-hub-text hover:bg-hub-surface2"
-            >
-              Export <ChevronDown size={16} />
-            </button>
-            <div className="absolute right-0 mt-1 w-48 rounded-xl border border-hub-border bg-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible z-10">
-              <button type="button" className="block w-full text-left px-4 py-2 text-sm hover:bg-hub-surface2" onClick={() => runExport('pdf')}>
-                Export as PDF
+      <div className="w-full animate-fade-in space-y-8">
+        <ModernPageHeader
+          title="My orders"
+          description="Track purchases, message sellers, or cancel while still pending."
+          actions={
+            <div className="relative group">
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-emerald-200 hover:bg-gray-50"
+              >
+                Export <ChevronDown size={16} />
               </button>
-              <button type="button" className="block w-full text-left px-4 py-2 text-sm hover:bg-hub-surface2" onClick={() => runExport('excel')}>
-                Export as Excel
-              </button>
+              <div className="invisible absolute right-0 z-10 mt-1 w-48 rounded-xl border border-gray-200 bg-white opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100">
+                <button type="button" className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-50" onClick={() => runExport('pdf')}>
+                  Export as PDF
+                </button>
+                <button type="button" className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-50" onClick={() => runExport('excel')}>
+                  Export as Excel
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="flex gap-1 overflow-x-auto pb-1">
-          {TABS.map((t) => (
-            <button key={t} onClick={() => { setTab(t); setPage(1); }}
-              className={`px-4 py-1.5 rounded-lg text-sm font-body whitespace-nowrap transition-colors ${tab === t ? 'bg-hub-accent text-white' : 'text-hub-muted hover:text-hub-text hover:bg-hub-surface2'}`}>{t}</button>
+          }
+        />
+        <div className="flex flex-wrap gap-2">
+          {TABS.map(({ value, label, icon: Icon }) => (
+            <button key={value} type="button" onClick={() => { setTab(value); setPage(1); }}
+              className={`inline-flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition-all ${
+                tab === value ? 'bg-emerald-600 text-white shadow-md' : 'border border-gray-200 bg-white text-gray-600 hover:border-emerald-200 hover:bg-emerald-50'
+              }`}
+            >
+              <Icon size={14} />{label}
+            </button>
           ))}
         </div>
         <Table columns={columns} data={orders} loading={loading} emptyMessage="No orders found" onRowClick={(r) => navigate(`/buyer/orders/${r.id}`)} />

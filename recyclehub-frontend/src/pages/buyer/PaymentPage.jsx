@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import BuyerLayout from '../../layouts/BuyerLayout';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import PageLoadingCard from '../../components/ui/PageLoadingCard';
 import PaymentForm from '../../components/features/PaymentForm';
 import ErrorState from '../../components/ui/ErrorState';
 import { getOrderById } from '../../api/orders.api';
@@ -75,19 +77,22 @@ export default function PaymentPage() {
 
   return (
     <BuyerLayout>
-      <div className="mx-auto max-w-3xl space-y-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Payments</h1>
-        {loading && <div className="rounded-2xl border border-emerald-100 bg-white p-6 text-sm text-gray-600">Loading payment details...</div>}
-        {!loading && error && <ErrorState title="Unable to Load Payment" message={error} onRetry={load} />}
+      <div className="mx-auto w-full max-w-3xl space-y-8">
+        <ModernPageHeader
+          title="Payment"
+          description="Complete MTN MoMo for this order. You will return to your order when payment succeeds."
+        />
+        {loading && <PageLoadingCard message="Loading payment details…" />}
+        {!loading && error && <ErrorState title="Unable to load payment" message={error} onRetry={load} />}
         {!loading && !error && order && (
           <>
-            <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
               <p className="text-sm text-gray-600">Order</p>
               <p className="font-medium text-gray-900">{order.materialTitle || `Order #${orderId}`}</p>
               <p className="mt-2 text-lg font-semibold text-emerald-700">{formatRWF(order.totalAmount || 0)}</p>
             </div>
 
-            <div className="flex flex-col gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4 text-sm text-gray-700 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-3 rounded-2xl border border-emerald-100/80 bg-emerald-50/60 p-4 text-sm text-gray-700 sm:flex-row sm:items-center">
               <MtnMomoMark className="h-10 w-auto shrink-0" />
               <p>
                 <span className="font-medium text-gray-900">Payment method:</span> MTN Mobile Money (MoMo) only. Enter the wallet number that will receive the payment prompt.
@@ -102,7 +107,7 @@ export default function PaymentPage() {
                 </button>
               </div>
             ) : (
-              <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
+              <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
                 <PaymentForm order={order} paymentMethod="MobileMoney" onSuccess={handleSuccess} />
                 {(payment?.paymentStatus === 'Pending' || payment?.paymentStatus === 'Requested') && (
                   <p className="mt-3 text-sm text-gray-600">Waiting for payment confirmation on your phone…</p>

@@ -100,7 +100,7 @@ export default function OrderDetailPage() {
 
   return (
     <BuyerLayout>
-      <div className="max-w-4xl mx-auto pb-12 space-y-6 animate-fade-in">
+      <div className="mx-auto max-w-4xl animate-fade-in space-y-8 pb-12">
         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
           <button
             type="button"
@@ -122,7 +122,9 @@ export default function OrderDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
           <div>
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Order</p>
-            <h1 className="text-2xl font-semibold text-gray-900 mt-1">#{order.id}</h1>
+            <h1 className="mt-1 text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent md:text-3xl">
+              #{order.id}
+            </h1>
             <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
               Placed {formatDate(order.createdAt)}
             </p>
