@@ -8,6 +8,7 @@ namespace RecycleHub.API.Services.Interfaces
     {
         Task<(bool Success, string Message, ReportResponseDto? Data)> CreateReportAsync(int reporterUserId, CreateReportDto dto);
         Task<PagedResult<ReportResponseDto>> GetReportsAsync(ReportFilterDto filter);
+        Task<PagedResult<ReportResponseDto>> GetMyReportsAsync(int reporterUserId, ReportFilterDto filter);
         Task<ReportResponseDto?> GetByIdAsync(int reportId);
         Task<(bool Success, string Message)> UpdateStatusAsync(int reportId, ReportStatus status);
         Task<int> GetPendingCountAsync();
