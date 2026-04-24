@@ -5,17 +5,20 @@ import Pagination from '../../components/ui/Pagination';
 import { getOrders } from '../../api/orders.api';
 import { formatRWF } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/formatDate';
-import { User, Building2, Package } from 'lucide-react';
+import { User, Building2, Package, ShoppingCart, Wallet, Clock, Truck, CheckCircle, XCircle, Activity } from 'lucide-react';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import DashboardStatCard from '../../components/ui/DashboardStatCard';
+import PageLoadingCard from '../../components/ui/PageLoadingCard';
 import toast from 'react-hot-toast';
 import { exportToPDF, exportToExcel } from '../../utils/exportUtils';
 
 const STATUS_TABS = [
-  { value: '', label: 'All' },
-  { value: 'Pending', label: 'Pending' },
-  { value: 'Accepted', label: 'Accepted' },
-  { value: 'Shipped', label: 'Shipped' },
-  { value: 'Delivered', label: 'Delivered' },
-  { value: 'Cancelled', label: 'Cancelled' },
+  { value: '',          label: 'All',       icon: Activity },
+  { value: 'Pending',   label: 'Pending',   icon: Clock },
+  { value: 'Accepted',  label: 'Accepted',  icon: Package },
+  { value: 'Shipped',   label: 'Shipped',   icon: Truck },
+  { value: 'Delivered', label: 'Delivered', icon: CheckCircle },
+  { value: 'Cancelled', label: 'Cancelled', icon: XCircle },
 ];
 
 export default function OrdersOverviewPage() {
@@ -92,65 +95,64 @@ export default function OrdersOverviewPage() {
 
   return (
     <AdminLayout>
-      <div className="max-w-6xl mx-auto space-y-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900">Orders</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Review marketplace orders between buyers and sellers. Amounts below are for the current page only.
-            </p>
-          </div>
-          {!loading && orders.length > 0 && (
-            <div className="flex flex-wrap gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={() => runExport('pdf')}
-                className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Export PDF
-              </button>
-              <button
-                type="button"
-                onClick={() => runExport('excel')}
-                className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800 hover:bg-emerald-100"
-              >
-                Export Excel
-              </button>
-            </div>
-          )}
+      <div className="mx-auto w-full max-w-6xl space-y-8">
+        <ModernPageHeader
+          title="Orders"
+          description="Review marketplace orders between buyers and sellers. Amounts below are for the current page only."
+          actions={
+            !loading && orders.length > 0 ? (
+              <div className="flex shrink-0 flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => runExport('pdf')}
+                  className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Export PDF
+                </button>
+                <button
+                  type="button"
+                  onClick={() => runExport('excel')}
+                  className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800 hover:bg-emerald-100"
+                >
+                  Export Excel
+                </button>
+              </div>
+            ) : null
+          }
+        />
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <DashboardStatCard
+            icon={ShoppingCart}
+            label="Orders (matching filters)"
+            value={totalCount.toLocaleString()}
+            badge="Filtered total"
+            tone="emerald"
+          />
+          <DashboardStatCard
+            icon={Wallet}
+            label="Total amount (this page)"
+            value={formatRWF(totalVolumeOnPage)}
+            badge="Current page"
+            tone="violet"
+          />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-            <p className="text-xs uppercase tracking-wide text-gray-500">Orders (matching filters)</p>
-            <p className="mt-2 text-2xl font-semibold text-gray-900">{totalCount}</p>
-          </div>
-          <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-            <p className="text-xs uppercase tracking-wide text-gray-500">Total amount (this page)</p>
-            <p className="mt-2 text-2xl font-semibold text-gray-900">{formatRWF(totalVolumeOnPage)}</p>
-          </div>
-        </div>
-
-        <div className="flex gap-2 flex-wrap">
-          {STATUS_TABS.map(({ value, label }) => (
-            <button
-              key={value || 'all'}
-              type="button"
-              onClick={() => {
-                setStatusFilter(value);
-                setPage(1);
-              }}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                statusFilter === value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        <div className="flex flex-wrap gap-2">
+          {STATUS_TABS.map(({ value, label, icon: Icon }) => (
+            <button key={value || 'all'} type="button"
+              onClick={() => { setStatusFilter(value); setPage(1); }}
+              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all ${
+                statusFilter === value ? 'bg-emerald-600 text-white shadow-md' : 'border border-gray-200 bg-white text-gray-600 hover:border-emerald-200 hover:bg-emerald-50'
               }`}
             >
-              {label}
+              <Icon size={14} />{label}
             </button>
           ))}
         </div>
 
         {loading ? (
-          <div className="rounded-2xl border border-emerald-100 bg-white p-6 text-sm text-gray-600">Loading orders…</div>
+          <PageLoadingCard message="Loading orders…" />
         ) : (
           <div className="overflow-x-auto rounded-2xl border border-gray-100 bg-white shadow-sm">
             <table className="min-w-full text-sm">
