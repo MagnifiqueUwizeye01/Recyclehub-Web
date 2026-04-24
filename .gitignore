@@ -20,6 +20,9 @@
 *.tmp
 **/errors.json
 
+# API uploads (local dev only — do not version user uploads)
+RecycleHub.API/wwwroot/uploads/
+
 # Environment (secrets — never commit)
 .env
 .env.development
