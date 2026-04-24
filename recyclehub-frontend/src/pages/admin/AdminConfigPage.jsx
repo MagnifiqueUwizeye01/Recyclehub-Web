@@ -1,12 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import ModernPanel from '../../components/ui/ModernPanel';
 import { MATERIAL_TYPES } from '../../utils/constants';
 import toast from 'react-hot-toast';
 
 export default function AdminConfigPage() {
-  const [pageSize, setPageSize] = useState(12);
   const [categories, setCategories] = useState(MATERIAL_TYPES);
   const [newCategory, setNewCategory] = useState('');
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('rh_config');
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed.categories)) setCategories(parsed.categories);
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const addCategory = () => {
     const value = newCategory.trim();
@@ -17,33 +29,43 @@ export default function AdminConfigPage() {
   };
 
   const save = () => {
-    localStorage.setItem('rh_config', JSON.stringify({ pageSize, categories }));
+    localStorage.setItem('rh_config', JSON.stringify({ categories }));
     toast.success('Settings saved.');
   };
 
   return (
     <AdminLayout>
-      <div className="mx-auto max-w-4xl space-y-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
-        <div className="space-y-4 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
-          <label className="block text-sm text-gray-700">
-            Default page size: {pageSize}
-            <input type="range" min={5} max={50} value={pageSize} onChange={(e) => setPageSize(Number(e.target.value))} className="mt-2 w-full" />
-          </label>
+      <div className="mx-auto w-full max-w-4xl space-y-8">
+        <ModernPageHeader
+          title="Platform settings"
+          description="Local preferences for listing categories. Saved in this browser."
+        />
+        <ModernPanel title="Material categories" subtitle="Used when sellers classify listings.">
           <div>
-            <p className="mb-2 text-sm font-medium text-gray-700">Material categories</p>
+            <p className="mb-2 text-sm font-medium text-gray-700">Active tags</p>
             <div className="mb-2 flex flex-wrap gap-2">
               {categories.map((item) => (
-                <span key={item} className="rounded-lg border border-gray-200 px-2 py-1 text-xs text-gray-700">{item}</span>
+                <span key={item} className="rounded-lg border border-gray-200 px-2 py-1 text-xs text-gray-700">
+                  {item}
+                </span>
               ))}
             </div>
             <div className="flex gap-2">
-              <input value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm" placeholder="Add category" />
-              <button type="button" onClick={addCategory} className="rounded-lg border border-emerald-600 px-3 py-2 text-sm text-emerald-700">Add</button>
+              <input
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                placeholder="Add category"
+              />
+              <button type="button" onClick={addCategory} className="rounded-lg border border-emerald-600 px-3 py-2 text-sm text-emerald-700">
+                Add
+              </button>
             </div>
           </div>
-          <button type="button" onClick={save} className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white">Save Settings</button>
-        </div>
+          <button type="button" onClick={save} className="mt-4 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700">
+            Save settings
+          </button>
+        </ModernPanel>
       </div>
     </AdminLayout>
   );
