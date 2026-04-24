@@ -84,7 +84,7 @@ export default function RegisterPage() {
         toast.error('Invalid response from server');
         return;
       }
-      login(result.token, result.user);
+      login(result.token, result.user, { remember: false });
       toast.success('Welcome to RecycleHub!');
       navigate(getDashboardPath(result.user.role));
     } catch (err) {
@@ -136,6 +136,14 @@ export default function RegisterPage() {
       {/* Right form panel */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 overflow-y-auto">
         <div className="w-full max-w-md">
+          <div className="mb-6 flex justify-center">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center rounded-full border border-hub-border bg-white px-4 py-2 text-sm font-semibold text-hub-muted shadow-sm transition-colors hover:border-emerald-200 hover:text-emerald-800"
+            >
+              Back to marketplace
+            </Link>
+          </div>
           {/* Steps */}
           <div className="flex items-center gap-2 mb-8">
             {steps.map((s, i) => (

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,18 +13,27 @@ import toast from 'react-hot-toast';
 import { getApiErrorMessage } from '../../utils/authMapper';
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, isAuthenticated, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [showPwd, setShowPwd] = useState(false);
   const [twoFaChallengeToken, setTwoFaChallengeToken] = useState(null);
   const [emailOtp, setEmailOtp] = useState('');
   const [otpSubmitting, setOtpSubmitting] = useState(false);
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({ resolver: zodResolver(loginSchema) });
+  const [rememberMe, setRememberMe] = useState(false);
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+  });
 
-  const finishLogin = (token, user) => {
-    login(token, user);
-    toast.success(`Welcome back, ${user.firstName || user.email}!`);
-    navigate(getDashboardPath(user.role));
+  useEffect(() => {
+    if (authLoading || !isAuthenticated || !user) return;
+    navigate(getDashboardPath(user.role), { replace: true });
+  }, [authLoading, isAuthenticated, user, navigate]);
+
+  const finishLogin = (authToken, userData) => {
+    login(authToken, userData, { remember: rememberMe });
+    toast.success(`Welcome back, ${userData.firstName || userData.email}!`);
+    navigate(getDashboardPath(userData.role));
   };
 
   const onSubmit = async (data) => {
@@ -83,6 +92,14 @@ export default function LoginPage() {
           <p className="text-hub-muted text-sm font-body mt-1">Sign in to your account</p>
         </div>
         <div className="bg-hub-surface border border-hub-border rounded-2xl p-8 shadow-2xl glow-emerald">
+          <div className="-mt-2 mb-6 flex justify-center">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center rounded-full border border-hub-border bg-white px-4 py-2 text-sm font-semibold text-hub-muted shadow-sm transition-colors hover:border-emerald-200 hover:text-emerald-800"
+            >
+              Back to marketplace
+            </Link>
+          </div>
           {twoFaChallengeToken ? (
             <form onSubmit={onSubmitOtp} className="space-y-4">
               <p className="text-sm text-hub-muted font-body">
@@ -121,6 +138,7 @@ export default function LoginPage() {
             <Input
               label="Email Address"
               type="email"
+              autoComplete="email"
               placeholder="you@company.com"
               icon={<Mail size={16} />}
               error={errors.email?.message}
@@ -129,6 +147,7 @@ export default function LoginPage() {
             <Input
               label="Password"
               type={showPwd ? 'text' : 'password'}
+              autoComplete="current-password"
               placeholder="••••••••"
               icon={<Lock size={16} />}
               error={errors.password?.message}
@@ -139,11 +158,24 @@ export default function LoginPage() {
               }
               {...register('password')}
             />
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 text-hub-muted cursor-pointer">
-                <input type="checkbox" className="accent-hub-accent" /> Remember me
-              </label>
-              <Link to="/forgot-password" className="text-hub-accent hover:underline">Forgot password?</Link>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center justify-between gap-3">
+                <label className="inline-flex cursor-pointer items-center gap-2 text-hub-muted">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="accent-hub-accent"
+                  />
+                  Remember me on this device
+                </label>
+                <Link to="/forgot-password" className="shrink-0 text-hub-accent hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
+              <p className="text-[11px] leading-snug text-hub-muted/90">
+                Leave unchecked to sign out automatically when you close the browser (recommended on shared computers).
+              </p>
             </div>
             <Button type="submit" loading={isSubmitting} className="w-full" size="lg">Sign In</Button>
           </form>
