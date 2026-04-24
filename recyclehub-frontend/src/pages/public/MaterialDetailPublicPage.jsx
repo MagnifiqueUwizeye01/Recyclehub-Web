@@ -10,6 +10,7 @@ import { formatRWF } from '../../utils/formatCurrency';
 import { getMaterialImageUrl } from '../../utils/materialImages';
 import { resolveMaterialAssetUrl } from '../../utils/assetUrl';
 import VerifiedBadge from '../../components/features/VerifiedBadge';
+import PageBackButton from '../../components/ui/PageBackButton';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function MaterialDetailPublicPage() {
@@ -79,6 +80,9 @@ export default function MaterialDetailPublicPage() {
 
   return (
     <div className="max-w-6xl mx-auto pb-12 animate-fade-in">
+      <div className="mb-4">
+        <PageBackButton fallback="/" label="All listings" />
+      </div>
       <nav className="text-xs text-hub-muted mb-6">
         <Link to="/" className="hover:text-emerald-600">
           Home

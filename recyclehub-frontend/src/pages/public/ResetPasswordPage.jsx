@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Recycle } from 'lucide-react';
 import { resetPassword } from '../../api/auth.api';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import toast from 'react-hot-toast';
-import { Recycle } from 'lucide-react';
 
 export default function ResetPasswordPage() {
   const [params] = useSearchParams();
@@ -42,6 +42,14 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen bg-hub-bg flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        <div className="mb-4 flex justify-center">
+          <Link
+            to="/login"
+            className="inline-flex items-center justify-center rounded-full border border-hub-border bg-white px-4 py-2 text-sm font-semibold text-hub-muted shadow-sm transition-colors hover:border-emerald-200 hover:text-emerald-800"
+          >
+            Back to sign in
+          </Link>
+        </div>
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-4">
             <div className="w-10 h-10 rounded-xl bg-hub-accent flex items-center justify-center"><Recycle size={22} className="text-white" /></div>

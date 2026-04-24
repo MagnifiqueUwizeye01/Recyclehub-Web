@@ -6,6 +6,7 @@ import { getMaterialsBySellerUser } from '../../api/materials.api';
 import { getSellerReviews } from '../../api/reviews.api';
 import MaterialCard from '../../components/features/MaterialCard';
 import ReviewCard from '../../components/features/ReviewCard';
+import PageBackButton from '../../components/ui/PageBackButton';
 import { useAuth } from '../../hooks/useAuth';
 import ReportModal from '../../components/features/ReportModal';
 import { resolveProfileImageUrl } from '../../utils/assetUrl';
@@ -52,7 +53,7 @@ export default function SellerProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <p className="text-gray-500">Loading…</p>
       </div>
     );
@@ -60,7 +61,7 @@ export default function SellerProfilePage() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <p className="text-gray-500">Seller not found.</p>
       </div>
     );
@@ -70,63 +71,73 @@ export default function SellerProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
-      <div className="max-w-5xl mx-auto px-4">
-        <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden mt-8">
-          <div className="h-40 bg-gradient-to-r from-emerald-900 via-emerald-700 to-emerald-900" />
-          <div className="px-6 pb-6 -mt-10 flex flex-col sm:flex-row sm:items-end gap-4 justify-between">
-            <div className="flex gap-4 items-end">
-              <div className="w-20 h-20 rounded-full bg-white border-4 border-white shadow flex items-center justify-center text-2xl font-bold text-emerald-800">
-                {profile.profileImageUrl ? (
-                  <img
-                    src={resolveProfileImageUrl(profile.profileImageUrl) || profile.profileImageUrl}
-                    alt=""
-                    className="w-full h-full rounded-full object-cover"
-                  />
-                ) : (
-                  profile.companyName?.[0] || 'S'
-                )}
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">{profile.companyName}</h1>
-                <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
-                  <MapPin size={14} /> {profile.city}
-                </p>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {profile.isVerified && (
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
-                      <ShieldCheck size={12} /> Verified Seller
-                    </span>
+      <div className="mx-auto max-w-5xl px-4 pt-6">
+        <div className="mb-5">
+          <PageBackButton fallback="/" label="Browse listings" />
+        </div>
+
+        <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+          <div className="h-28 bg-gradient-to-r from-emerald-900 via-emerald-700 to-emerald-900 sm:h-32" />
+
+          <div className="border-b border-gray-100 px-5 pb-5 pt-5 sm:px-6">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center">
+                <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-4 border-white bg-white text-2xl font-bold text-emerald-800 shadow-md ring-1 ring-gray-100">
+                  {profile.profileImageUrl ? (
+                    <img
+                      src={resolveProfileImageUrl(profile.profileImageUrl) || profile.profileImageUrl}
+                      alt=""
+                      className="h-full w-full rounded-full object-cover"
+                    />
+                  ) : (
+                    profile.companyName?.[0] || 'S'
                   )}
-                  <span className="text-xs text-gray-400">Member since {profile.memberSinceYear}</span>
+                </div>
+                <div className="min-w-0 space-y-1">
+                  <h1 className="text-2xl font-bold text-gray-900">{profile.companyName}</h1>
+                  <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-500">
+                    <span className="inline-flex items-center gap-1">
+                      <MapPin size={14} className="shrink-0" /> {profile.city}
+                    </span>
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    {profile.isVerified && (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-100 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">
+                        <ShieldCheck size={12} /> Verified Seller
+                      </span>
+                    )}
+                    <span className="text-xs text-gray-400">Member since {profile.memberSinceYear}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={() => {
-                  if (!isAuthenticated) goRegister();
-                  else navigate('/messages', { state: { otherUserId: uid } });
-                }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700"
-              >
-                <MessageSquare size={16} /> Message Seller
-              </button>
-              <button
-                type="button"
-                title="Report"
-                onClick={() => {
-                  if (!isAuthenticated) goRegister();
-                  else setReportOpen(true);
-                }}
-                className="p-2 rounded-xl border border-rose-100 text-rose-600 hover:bg-rose-50"
-              >
-                <Flag size={18} />
-              </button>
+
+              <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!isAuthenticated) goRegister();
+                    else navigate('/messages', { state: { otherUserId: uid } });
+                  }}
+                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                >
+                  <MessageSquare size={16} /> Message Seller
+                </button>
+                <button
+                  type="button"
+                  title="Report"
+                  onClick={() => {
+                    if (!isAuthenticated) goRegister();
+                    else setReportOpen(true);
+                  }}
+                  className="rounded-xl border border-rose-100 p-2 text-rose-600 hover:bg-rose-50"
+                >
+                  <Flag size={18} />
+                </button>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 px-6 py-6 border-t border-gray-100 bg-gray-50/80">
+          <div className="grid grid-cols-2 gap-3 border-b border-gray-100 bg-gray-50/80 px-5 py-5 sm:grid-cols-4 sm:gap-4 sm:px-6">
             <Stat label="Listings" value={profile.totalListings} />
             <Stat label="Sales" value={profile.totalSales} />
             <Stat
@@ -143,12 +154,14 @@ export default function SellerProfilePage() {
         </div>
 
         <section className="mt-10">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">About</h2>
-          <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">{profile.description || 'No description provided.'}</p>
+          <h2 className="mb-3 text-lg font-semibold text-gray-900">About</h2>
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-600">
+            {profile.description || 'No description provided.'}
+          </p>
         </section>
 
         <section className="mt-10">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Active listings from this seller</h2>
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Active listings from this seller</h2>
           {materials.length === 0 ? (
             <p className="text-sm text-gray-500">No active listings.</p>
           ) : (
@@ -161,27 +174,18 @@ export default function SellerProfilePage() {
         </section>
 
         <section className="mt-10">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Certificates</h2>
-          {profile.certificates?.length ? (
-            <ul className="space-y-2">
-              {profile.certificates.map((c, i) => (
-                <li key={i} className="text-sm border border-gray-100 rounded-xl px-4 py-3 bg-white">
-                  <span className="font-medium text-gray-900">{c.certificateName}</span>
-                  <span className="text-gray-500"> · {c.issuingAuthority}</span>
-                  <span className="block text-xs text-gray-400 mt-1">
-                    Issued {c.issueDate?.slice?.(0, 10) || c.issueDate}
-                    {c.expiryDate ? ` · Expires ${c.expiryDate.slice?.(0, 10) || c.expiryDate}` : ''}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-gray-500">No public certificates listed.</p>
-          )}
+          <h2 className="mb-3 text-lg font-semibold text-gray-900">Credentials</h2>
+          <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 text-sm text-gray-700 shadow-sm">
+            {profile.isVerified ? (
+              <p className="font-medium text-emerald-700">Verified</p>
+            ) : (
+              <p className="text-gray-500">This seller is not verified.</p>
+            )}
+          </div>
         </section>
 
-        <section className="mt-10 mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">What buyers say</h2>
+        <section className="mb-8 mt-10">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">What buyers say</h2>
           {reviews.length === 0 ? (
             <p className="text-sm text-gray-500">No reviews yet.</p>
           ) : (
@@ -207,9 +211,9 @@ export default function SellerProfilePage() {
 
 function Stat({ label, value }) {
   return (
-    <div className="rounded-xl bg-white border border-gray-100 p-3 text-center">
+    <div className="rounded-xl border border-gray-100 bg-white p-3 text-center shadow-sm">
       <p className="text-xs text-gray-500">{label}</p>
-      <div className="text-lg font-semibold text-gray-900 mt-1">{value}</div>
+      <div className="mt-1 text-lg font-semibold text-gray-900">{value}</div>
     </div>
   );
 }
