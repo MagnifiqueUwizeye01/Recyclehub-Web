@@ -100,7 +100,7 @@ export default function MaterialDetailPage() {
 
   return (
     <BuyerLayout>
-      <div className="max-w-6xl mx-auto pb-12 animate-fade-in space-y-8">
+      <div className="mx-auto max-w-6xl animate-fade-in space-y-8 pb-12">
         <nav className="text-sm text-gray-500">
           <Link to="/buyer/marketplace" className="hover:text-emerald-600">
             Marketplace
@@ -131,7 +131,9 @@ export default function MaterialDetailPage() {
 
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight">{material.title}</h1>
+              <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent md:text-3xl">
+                {material.title}
+              </h1>
               <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-600">
                 <MapPin size={16} className="text-emerald-600 shrink-0" />
                 <span>
@@ -283,7 +285,7 @@ export default function MaterialDetailPage() {
 function MaterialOrderForm({ material, materialId, isAuthenticated, goRegisterBuyer }) {
   const navigate = useNavigate();
   const [ordering, setOrdering] = useState(false);
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm({
+  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm({
     resolver: zodResolver(buildOrderSchema(!!material?.isSmartSwap)),
     defaultValues: {
       quantityOrdered: material?.minOrderQty || 1,
@@ -299,6 +301,11 @@ function MaterialOrderForm({ material, materialId, isAuthenticated, goRegisterBu
     setValue('quantityOrdered', material.minOrderQty || 1);
     setValue('shippingAddress', 'Kigali, Rwanda');
   }, [material, setValue]);
+
+  const watchedQty   = Number(watch('quantityOrdered'))   || 0;
+  const watchedPrice = Number(watch('offeredUnitPrice'))   || 0;
+  const unitPrice    = material.isSmartSwap ? watchedPrice : (material.unitPrice ?? 0);
+  const totalPrice   = watchedQty * unitPrice;
 
   const onOrder = async (data) => {
     if (!isAuthenticated) {
@@ -351,15 +358,23 @@ function MaterialOrderForm({ material, materialId, isAuthenticated, goRegisterBu
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            {material.isSmartSwap ? 'Proposed unit price (RWF, 0 for swap)' : 'Offered unit price (RWF)'}
+            {material.isSmartSwap ? 'Proposed unit price (RWF, 0 for swap)' : 'Unit price (RWF)'}
           </label>
           <input
             type="number"
             step="0.01"
             required={!material.isSmartSwap}
+            readOnly={!material.isSmartSwap}
             {...register('offeredUnitPrice')}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
+            className={`w-full rounded-xl border px-4 py-2.5 text-sm outline-none ${
+              material.isSmartSwap
+                ? 'border-gray-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
+                : 'border-gray-200 bg-gray-50 text-gray-500 cursor-not-allowed select-none'
+            }`}
           />
+          {!material.isSmartSwap && (
+            <p className="text-xs text-gray-400 mt-1">Price is set by the seller and cannot be changed.</p>
+          )}
           {errors.offeredUnitPrice && (
             <p className="text-xs text-red-600 mt-1">{errors.offeredUnitPrice.message}</p>
           )}
@@ -383,6 +398,19 @@ function MaterialOrderForm({ material, materialId, isAuthenticated, goRegisterBu
           />
         </div>
       </div>
+
+      {/* Order summary */}
+      {watchedQty > 0 && (
+        <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-5 py-4 space-y-2">
+          <p className="text-xs font-semibold text-emerald-800 uppercase tracking-wide">Order summary</p>
+          <div className="flex items-center justify-between text-sm text-gray-700">
+            <span>
+              {watchedQty} {material.unit || 'unit'} × {formatRWF(unitPrice)}
+            </span>
+            <span className="font-bold text-lg text-emerald-700">{formatRWF(totalPrice)}</span>
+          </div>
+        </div>
+      )}
 
       <button
         type="submit"
