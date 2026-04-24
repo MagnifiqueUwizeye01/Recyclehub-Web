@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Package, ShoppingCart, TrendingUp, Plus, RefreshCw, Clock } from 'lucide-react';
 import SellerLayout from '../../layouts/SellerLayout';
 import ErrorState from '../../components/ui/ErrorState';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import DashboardStatCard from '../../components/ui/DashboardStatCard';
+import ModernPanel from '../../components/ui/ModernPanel';
+import PageLoadingCard from '../../components/ui/PageLoadingCard';
 import { getSellerMaterials } from '../../api/materials.api';
 import { getSellerOrders, applySellerOrderAction } from '../../api/orders.api';
 import { formatRWF } from '../../utils/formatCurrency';
@@ -74,52 +79,102 @@ export default function SellerDashboard() {
 
   return (
     <SellerLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900">Seller Dashboard</h1>
-            <p className="text-sm text-gray-600">Overview of your listings, orders, and revenue.</p>
-          </div>
-          <Link to="/seller/materials/add" className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white">
-            Add Listing
-          </Link>
-        </div>
+      <div className="w-full space-y-8">
+        <ModernPageHeader
+          title="Seller dashboard"
+          description="Overview of your listings, orders, and revenue."
+          actions={
+            <>
+              <button
+                type="button"
+                onClick={load}
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:border-emerald-200 hover:bg-gray-50"
+              >
+                <RefreshCw size={16} className="text-gray-400" />
+                Refresh
+              </button>
+              <Link
+                to="/seller/materials/add"
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-700"
+              >
+                <Plus size={18} />
+                Add listing
+              </Link>
+            </>
+          }
+        />
 
-        {loading && <div className="rounded-2xl bg-white p-8 text-sm text-gray-600 shadow-sm">Loading dashboard...</div>}
-        {!loading && error && <ErrorState title="Unable to Load Dashboard" message={error} onRetry={load} />}
+        {loading && <PageLoadingCard message="Loading your dashboard…" />}
+        {!loading && error && <ErrorState title="Unable to load dashboard" message={error} onRetry={load} />}
 
         {!loading && !error && (
           <>
-            <div className="grid gap-4 md:grid-cols-4">
-              {[
-                ['Total Listings', stats.totalListings],
-                ['Active Listings', stats.activeListings],
-                ['Total Orders', stats.totalOrders],
-                ['Revenue', formatRWF(stats.revenue)],
-              ].map(([label, value]) => (
-                <div key={label} className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-                  <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
-                  <p className="mt-2 text-2xl font-semibold text-gray-900">{value}</p>
-                </div>
-              ))}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+              <DashboardStatCard
+                icon={Package}
+                label="Total listings"
+                value={stats.totalListings.toLocaleString()}
+                badge="Catalog"
+                tone="emerald"
+              />
+              <DashboardStatCard
+                icon={TrendingUp}
+                label="Active listings"
+                value={stats.activeListings.toLocaleString()}
+                badge="Live"
+                tone="cyan"
+              />
+              <DashboardStatCard
+                icon={ShoppingCart}
+                label="Total orders"
+                value={stats.totalOrders.toLocaleString()}
+                badge="All time"
+                tone="blue"
+              />
+              <DashboardStatCard
+                icon={TrendingUp}
+                label="Revenue (delivered)"
+                value={formatRWF(stats.revenue)}
+                badge="Settled"
+                tone="violet"
+              />
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2">
-              <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900">Pending Orders</h2>
+              <ModernPanel
+                title="Pending orders"
+                subtitle="Accept or reject new buyer requests."
+                headerRight={
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-800">
+                    <Clock size={14} />
+                    {pendingOrders.length} open
+                  </span>
+                }
+              >
                 {pendingOrders.length === 0 ? (
-                  <p className="mt-3 text-sm text-gray-600">No pending orders right now.</p>
+                  <p className="text-sm text-gray-500">No pending orders right now.</p>
                 ) : (
-                  <div className="mt-4 space-y-3">
+                  <div className="space-y-3">
                     {pendingOrders.map((order) => (
-                      <div key={order.id} className="rounded-xl border border-gray-100 p-3">
+                      <div
+                        key={order.id}
+                        className="rounded-xl border border-gray-100 bg-gray-50/50 p-4 transition-colors hover:bg-white"
+                      >
                         <p className="font-medium text-gray-900">{order.materialTitle || 'Material order'}</p>
-                        <p className="text-sm text-gray-600">{formatRWF(order.totalAmount || 0)}</p>
-                        <div className="mt-2 flex gap-2">
-                          <button onClick={() => handleOrderAction(order.id, 'Accepted')} className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs text-white">
+                        <p className="mt-1 text-sm text-gray-600">{formatRWF(order.totalAmount || 0)}</p>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleOrderAction(order.id, 'Accepted')}
+                            className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700"
+                          >
                             Accept
                           </button>
-                          <button onClick={() => handleOrderAction(order.id, 'Rejected')} className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs text-gray-700">
+                          <button
+                            type="button"
+                            onClick={() => handleOrderAction(order.id, 'Rejected')}
+                            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+                          >
                             Reject
                           </button>
                         </div>
@@ -127,23 +182,25 @@ export default function SellerDashboard() {
                     ))}
                   </div>
                 )}
-              </div>
+              </ModernPanel>
 
-              <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900">Recent Listings</h2>
+              <ModernPanel title="Recent listings" subtitle="Latest materials on your storefront.">
                 {materials.length === 0 ? (
-                  <p className="mt-3 text-sm text-gray-600">No listings yet. Add your first listing to get started.</p>
+                  <p className="text-sm text-gray-500">No listings yet. Add your first listing to get started.</p>
                 ) : (
-                  <div className="mt-4 space-y-2">
+                  <ul className="divide-y divide-gray-100 rounded-xl border border-gray-100">
                     {materials.slice(0, 5).map((material) => (
-                      <div key={material.id} className="flex items-center justify-between rounded-lg border border-gray-100 p-3">
-                        <p className="text-sm font-medium text-gray-900">{material.title || 'Untitled'}</p>
-                        <p className="text-sm text-emerald-700">{formatRWF(material.unitPrice || 0)}</p>
-                      </div>
+                      <li
+                        key={material.id}
+                        className="flex items-center justify-between gap-3 px-4 py-3 text-sm hover:bg-gray-50/80"
+                      >
+                        <span className="font-medium text-gray-900">{material.title || 'Untitled'}</span>
+                        <span className="shrink-0 font-medium text-emerald-700">{formatRWF(material.unitPrice || 0)}</span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 )}
-              </div>
+              </ModernPanel>
             </div>
           </>
         )}
