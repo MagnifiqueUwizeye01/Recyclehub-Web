@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Users, ShieldCheck, CreditCard, Building2, RefreshCw } from 'lucide-react';
 import AdminLayout from '../../layouts/AdminLayout';
 import ErrorState from '../../components/ui/ErrorState';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import DashboardStatCard from '../../components/ui/DashboardStatCard';
+import ModernPanel from '../../components/ui/ModernPanel';
+import PageLoadingCard from '../../components/ui/PageLoadingCard';
 import { getUsers } from '../../api/users.api';
 import { getSellerProfiles } from '../../api/sellerProfiles.api';
 import { getAllPayments } from '../../api/payments.api';
@@ -69,49 +74,80 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Admin Dashboard</h1>
-        {loading && (
-          <div className="rounded-2xl border border-emerald-100 bg-white p-6 text-sm text-gray-600">Loading dashboard...</div>
-        )}
+      <div className="w-full space-y-8">
+        <ModernPageHeader
+          title="Admin dashboard"
+          description="Platform health, verifications, and payment activity at a glance."
+          actions={
+            <button
+              type="button"
+              onClick={load}
+              className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:border-emerald-200 hover:bg-gray-50"
+            >
+              <RefreshCw size={16} className="text-gray-400" />
+              Refresh
+            </button>
+          }
+        />
+
+        {loading && <PageLoadingCard message="Loading dashboard…" />}
         {!loading && error && <ErrorState title="Unable to load dashboard" message={error} onRetry={load} />}
+
         {!loading && !error && (
           <>
-            <div className="grid gap-4 md:grid-cols-3">
-              <Metric label="Total Users" value={stats.totalUsers} />
-              <Metric label="Pending Seller Verification" value={stats.pendingVerifications} />
-              <Metric label="Payments (records)" value={stats.totalPayments} />
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <DashboardStatCard
+                icon={Users}
+                label="Total users"
+                value={stats.totalUsers.toLocaleString()}
+                badge="Directory"
+                tone="emerald"
+              />
+              <DashboardStatCard
+                icon={ShieldCheck}
+                label="Pending seller verification"
+                value={stats.pendingVerifications.toLocaleString()}
+                badge="Action queue"
+                tone="amber"
+              />
+              <DashboardStatCard
+                icon={CreditCard}
+                label="Payment records"
+                value={stats.totalPayments.toLocaleString()}
+                badge="All time"
+                tone="violet"
+              />
             </div>
-            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-              <h2 className="font-semibold text-gray-900 mb-3">Pending sellers</h2>
-              <p className="text-sm text-gray-500 mb-3">
-                New material listings go live as soon as a verified seller posts them; only seller accounts require document review.
-              </p>
+
+            <ModernPanel
+              title="Pending sellers"
+              subtitle="Seller accounts awaiting document review before full verification."
+              headerRight={
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800">
+                  <Building2 size={14} />
+                  {stats.pendingVerifications} in queue
+                </span>
+              }
+            >
               {pendingSellers.length === 0 ? (
                 <p className="text-sm text-gray-500">No pending seller verifications.</p>
               ) : (
-                <ul className="space-y-2 text-sm">
+                <ul className="divide-y divide-gray-100 rounded-xl border border-gray-100">
                   {pendingSellers.map((s) => (
-                    <li key={s.sellerProfileId ?? s.id} className="flex justify-between gap-2">
-                      <span className="text-gray-800">{s.companyName || s.CompanyName}</span>
-                      <span className="text-gray-400">{s.city || s.City}</span>
+                    <li
+                      key={s.sellerProfileId ?? s.id}
+                      className="flex items-center justify-between gap-3 px-4 py-3 text-sm first:rounded-t-xl last:rounded-b-xl hover:bg-gray-50/80"
+                    >
+                      <span className="font-medium text-gray-900">{s.companyName || s.CompanyName}</span>
+                      <span className="shrink-0 text-gray-500">{s.city || s.City || '—'}</span>
                     </li>
                   ))}
                 </ul>
               )}
-            </div>
+            </ModernPanel>
           </>
         )}
       </div>
     </AdminLayout>
-  );
-}
-
-function Metric({ label, value }) {
-  return (
-    <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-      <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-gray-900">{value}</p>
-    </div>
   );
 }
