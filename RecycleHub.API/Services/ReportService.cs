@@ -64,6 +64,30 @@ namespace RecycleHub.API.Services
             };
         }
 
+        public async Task<PagedResult<ReportResponseDto>> GetMyReportsAsync(int reporterUserId, ReportFilterDto filter)
+        {
+            var q = _db.Reports
+                .Include(r => r.ReporterUser)
+                .Include(r => r.ReportedUser)
+                .Where(r => r.ReporterUserId == reporterUserId)
+                .AsQueryable();
+            if (filter.Status.HasValue) q = q.Where(r => r.Status == filter.Status.Value);
+
+            var total = await q.CountAsync();
+            var rows = await q.OrderByDescending(r => r.CreatedAt)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<ReportResponseDto>
+            {
+                Items = rows.Select(MapRow).ToList(),
+                TotalCount = total,
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize
+            };
+        }
+
         public async Task<ReportResponseDto?> GetByIdAsync(int reportId)
         {
             var r = await _db.Reports
