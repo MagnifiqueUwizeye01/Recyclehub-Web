@@ -1,34 +1,86 @@
 # RecycleHub
 
-B2B marketplace for recycled materials — **ASP.NET Core 8** API plus a **React (Vite)** web app. Buyers, sellers, and admins share one platform: listings, orders, mobile-money payments (PawaPay), messaging, notifications, reviews, and admin tools.
+**Where recycled materials meet real business.** RecycleHub is a full-stack B2B-style marketplace that helps **sellers** list surplus and recycled materials, **buyers** discover and order what they need, and **admins** keep the platform fair, visible, and under control—one web app, one API, one database.
+
+---
+
+## Why RecycleHub exists
+
+Waste is not only an environmental problem; it is also a coordination problem. Businesses that *have* usable scrap, offcuts, or processed recyclables often struggle to find reliable buyers. Buyers who *need* those materials at a fair price and with traceability do not always know where to look. RecycleHub closes that gap: a **single, role-based platform** for discovery, ordering, payment, communication, and governance—so “recycling” becomes a **traceable transaction**, not a guess.
+
+---
+
+## What the system does (in plain language)
+
+| Who | What they get |
+|-----|----------------|
+| **Visitors** | Browse a public landing and material detail pages; see what is on offer before signing up. |
+| **Buyers** | A **marketplace** to explore materials, place **orders**, pay through integrated **mobile money (PawaPay)**, track order status, use **SmartSwap**-style matching for relevant offers, and message sellers. |
+| **Sellers** | **Inventory** management (add/edit materials, images), **orders** from buyers, **analytics** on their activity, and **reports** they file for support or moderation. |
+| **Admins** | **User, buyer, and seller** oversight, **orders** and **payments** overviews, **review** moderation, **platform analytics**, **configuration**, **certificate** request handling, and **reports** from the community for action. |
+
+Everyone with an account gets **profile and settings**, **private messaging**, and **notifications** (backed by **SignalR** in real time when the app is connected).
+
+---
+
+## How it works (architecture at a glance)
+
+1. **Browser (React + Vite)** — A single-page app with **role-based routes** (public, buyer, seller, admin, and shared areas like messages). The UI talks to the API over HTTPS using **JWT** tokens after login/register.
+2. **API (ASP.NET Core 8)** — REST endpoints for materials, orders, payments, users, messages, notifications, reviews, reports, certificates, uploads, and more. **Entity Framework Core** maps C# models to **SQL Server**. **BCrypt** secures passwords; **MailKit** can send **OTP** flows for password reset when SMTP is configured.
+3. **Real time** — **SignalR** hubs deliver live **notifications** to connected clients (with JWT passed for WebSocket connections).
+4. **Files** — Material images and uploads are served from the API’s `wwwroot` (local dev); in production you would point storage to a persistent or cloud-backed location.
+
+```text
+[ React SPA ]  --HTTPS + JWT-->  [ RecycleHub.API ]  --EF Core-->  [ SQL Server ]
+      ^                                |
+      +-------- SignalR (notifications) 
+```
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|--------|------------|
+| Frontend | React 19, Vite 8, React Router, Tailwind CSS, Axios, SignalR client, React Hook Form, Zod |
+| Backend | ASP.NET Core 8, EF Core 8, SQL Server, JWT Bearer, SignalR, Swashbuckle (Swagger), BCrypt, MailKit |
+| Payments | PawaPay integration (configure via `appsettings` / user secrets) |
+
+---
 
 ## Repository layout
 
 | Path | Description |
 |------|-------------|
-| `RecycleHub.API/` | REST API, EF Core, JWT auth, SignalR notifications |
-| `recyclehub-frontend/` | React SPA (role-based routes: public, buyer, seller, admin) |
-| `Tools/PasswordHash/` | Small console helper for generating password hashes (dev/ops) |
-| `RecycleHub.API/Database/` | Reference **SQL Server** scripts (`RecycleHub_Schema_Tables.sql`, `RecycleHub_Schema_StoredProcedures.sql`) — align your database with the EF model |
+| `RecycleHub.API/` | Web API, EF `DbContext`, services, SignalR hubs, controllers |
+| `recyclehub-frontend/` | Vite + React SPA (public, buyer, seller, admin, shared routes) |
+| `Tools/PasswordHash/` | Optional console helper for generating password hashes in development |
+| `Tools/team-commit-sequence.ps1` | One-off script some teams use for batch commits (optional) |
+| `RecycleHub.API/Database/` | Reference **SQL** scripts to align a database with the model when needed |
+
+---
 
 ## Prerequisites
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Node.js](https://nodejs.org/) (LTS recommended) and npm
-- SQL Server (LocalDB or full instance) and a database the API can connect to
+- [Node.js](https://nodejs.org/) (LTS) and npm
+- **SQL Server** (LocalDB or a full instance) and a database the API can use
+
+---
 
 ## Configuration
 
 ### API
 
-1. Open `RecycleHub.API/appsettings.Development.json` (or use [user secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) for production-like values).
-2. Set `ConnectionStrings:DefaultConnection` to your SQL Server database.
-3. Configure JWT, email, and any third-party keys your environment needs (see `appsettings.json` for structure).
+1. Set `ConnectionStrings:DefaultConnection` in `appsettings.Development.json` or use [user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) so secrets are never committed.
+2. Complete **JWT** and **PawaPay** (and any **email/SMTP** for OTP) sections as in `appsettings.json` — use empty placeholders locally and real values only in your own machine or deployment environment.
 
 ### Frontend
 
 1. From `recyclehub-frontend/`, copy `.env.example` to `.env.development` (or `.env`).
-2. Set `VITE_API_BASE_URL` to your API base URL (default in the example targets a local API).
+2. Set `VITE_API_BASE_URL` to your running API (the example points at a typical local dev URL).
+
+---
 
 ## Run locally
 
@@ -47,18 +99,26 @@ npm install
 npm run dev
 ```
 
-Then open the URL Vite prints (typically `http://localhost:5173`). Ensure the API is running and CORS matches your frontend origin if you change ports.
+Open the URL Vite prints (often `http://localhost:5173`). Keep the API running; if you change ports, align **CORS** in the API with your front-end origin and update `VITE_API_BASE_URL`.
+
+**Optional:** With the API running, visit the Swagger UI if enabled in your environment to explore REST routes interactively.
+
+---
 
 ## Database
 
-The app uses **Entity Framework Core**; the schema is defined in code under `RecycleHub.API/Data/` and `RecycleHub.API/Models/`. For a fresh database or team alignment, use the scripts in `RecycleHub.API/Database/` and adjust names/paths if your DBA uses different conventions.
+The application schema is **code-first** under `RecycleHub.API/Data` and `RecycleHub.API/Models/`. For a fresh install or DBA handoff, scripts in `RecycleHub.API/Database/` (`RecycleHub_Schema_Tables.sql`, stored procedures) help align a SQL Server instance with the app’s expectations.
 
-## GitHub & branching
+---
+
+## GitHub and collaboration
 
 Remote: **https://github.com/MagnifiqueUwizeye01/Recyclehub**
 
-Team branches (`Uwizeye-Magnifique`, `shema_cyusa_patrick_26679`, `Dushime_Ineza_Belise`, `numubyeyi_irumva_raissa_26325`, `Gatabazi_Uwera_Getrude`) are used for ongoing work; **`main`** carries the integrated product. Open pull requests into `main` rather than pushing directly unless you own the repo and know the release process.
+Feature work is often done on team branches; **`main`** is the integrated product line. Use pull requests and clear commit messages so **each collaborator’s contribution** is visible in history (as expected in academic and professional reviews).
+
+---
 
 ## License / contact
 
-Add your license and support contacts here when you publish the project publicly.
+Add your course team’s license, supervisor contact, or support line here when you publish the repository for grading or the public.
