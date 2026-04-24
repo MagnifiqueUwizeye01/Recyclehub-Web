@@ -109,11 +109,15 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 **Terminal 1 — API**
 
 cd RecycleHub.API
+
 dotnet run
 
 **Terminal 2 — frontend**
+
 cd recyclehub-frontend
+
 npm install
+
 npm run dev
 
 
