@@ -22,7 +22,7 @@ and under control—one web app, one API, one database.
 
 ---
 
-## 🎯 Why RecycleHub exists
+##  Why RecycleHub exists
 
 Waste is **not only an environmental problem**; it is also a **coordination problem**. Businesses that *have* usable scrap, offcuts, or processed recyclables often struggle to find reliable buyers. Buyers who *need* those materials at a fair price and with traceability do not always know where to look. 
 
@@ -43,7 +43,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ---
 
-## 🏗️ How it works (architecture at a glance)
+##  How it works (architecture at a glance)
 
 [ React SPA ] --HTTPS + JWT--> [ RecycleHub.API ] --EF Core--> [ SQL Server ]
 ^ |
@@ -60,7 +60,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ---
 
-## 🛠️ Tech stack
+## Tech stack
 
 | Layer | Technology |
 |:------|:------------|
@@ -70,7 +70,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ---
 
-## 📁 Repository layout
+##  Repository layout
 
 | Path | Description |
 |:-----|:-------------|
@@ -82,7 +82,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ---
 
-## ✅ Prerequisites
+## Prerequisites
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Node.js](https://nodejs.org/) (LTS) and npm
@@ -90,7 +90,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ---
 
-## ⚙️ Configuration
+##  Configuration
 
 ### API
 
@@ -124,12 +124,12 @@ npm run dev
 ```bash
 Open the URL Vite prints (often http://localhost:5173). Keep the API running; if you change ports, align CORS in the API with your front-end origin and update VITE_API_BASE_URL.
 
-📖 Optional: With the API running, visit the Swagger UI if enabled in your environment to explore REST routes interactively.
+ Optional: With the API running, visit the Swagger UI if enabled in your environment to explore REST routes interactively.
 
-🗄️ Database
+ Database
 The application schema is code-first under RecycleHub.API/Data and RecycleHub.API/Models/. For a fresh install or DBA handoff, scripts in RecycleHub.API/Database/ (RecycleHub_Schema_Tables.sql, stored procedures) help align a SQL Server instance with the app's expectations.
 
-🤝 GitHub and collaboration
+ GitHub and collaboration
 Remote: https://github.com/MagnifiqueUwizeye01/Recyclehub
 
 Feature work is often done on team branches; main is the integrated product line. Use pull requests and clear commit messages so each collaborator's contribution is visible in history (as expected in academic and professional reviews).
