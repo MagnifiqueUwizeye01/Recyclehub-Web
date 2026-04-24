@@ -42,8 +42,8 @@ export default function SmartSwapPromoBlocks() {
           <div className="absolute bottom-6 left-6 right-6 text-white">
             <span className="text-emerald-300 text-xs font-bold tracking-widest">SMARTSWAP</span>
             <h3 className="text-2xl md:text-3xl font-extrabold mt-2 mb-2">Match & exchange materials</h3>
-            <span className="text-emerald-300 font-semibold inline-flex items-center gap-1">
-              Try Now →
+            <span className="font-semibold text-emerald-300 underline decoration-emerald-400/60 underline-offset-2">
+              Try SmartSwap
             </span>
           </div>
         </Link>
