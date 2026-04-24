@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SellerLayout from '../../layouts/SellerLayout';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
+import PageLoadingCard from '../../components/ui/PageLoadingCard';
 import StatusChip from '../../components/ui/StatusChip';
 import Pagination from '../../components/ui/Pagination';
 import ConfirmDialog from '../../components/ui/ConfirmDialog';
@@ -9,16 +11,16 @@ import { getSellerMaterials, deleteMaterial } from '../../api/materials.api';
 import { normalizeMaterial } from '../../utils/materialMapper';
 import { formatRWF } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/formatDate';
-import { Plus, Pencil, Trash2, Search, Package } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, Package, Activity, Clock, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const PAGE_SIZE = 10;
 
 const TABS = [
-  { label: 'All', value: 'All' },
-  { label: 'Pending review', value: 'Pending' },
-  { label: 'Available', value: 'Available' },
-  { label: 'Sold', value: 'Sold' },
+  { label: 'All',            value: 'All',       icon: Activity },
+  { label: 'Pending review', value: 'Pending',   icon: Clock },
+  { label: 'Available',      value: 'Available', icon: CheckCircle },
+  { label: 'Sold',           value: 'Sold',      icon: Package },
 ];
 
 export default function InventoryPage() {
@@ -89,29 +91,26 @@ export default function InventoryPage() {
 
   return (
     <SellerLayout>
-      <div className="max-w-6xl mx-auto space-y-6 pb-12">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900">My listings</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Manage materials you sell on RecycleHub. New listings appear on the buyer marketplace as soon as you publish them.
-            </p>
-            <p className="mt-2 text-sm text-gray-600">
-              <span className="font-medium text-gray-900">{totalCount}</span> listing
-              {totalCount !== 1 ? 's' : ''} total
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => navigate('/seller/materials/add')}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 shrink-0"
-          >
-            <Plus size={18} />
-            Add material
-          </button>
-        </div>
+      <div className="mx-auto w-full max-w-6xl space-y-8 pb-12">
+        <ModernPageHeader
+          title="My listings"
+          description="Manage materials you sell on RecycleHub. New listings appear on the buyer marketplace as soon as you publish them."
+          actions={
+            <button
+              type="button"
+              onClick={() => navigate('/seller/materials/add')}
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+            >
+              <Plus size={18} />
+              Add listing
+            </button>
+          }
+        />
+        <p className="-mt-2 text-sm text-gray-600">
+          <span className="font-medium text-gray-900">{totalCount}</span> listing{totalCount !== 1 ? 's' : ''} total
+        </p>
 
-        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm space-y-5">
+        <div className="space-y-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap gap-2">
               {TABS.map((t) => (
@@ -122,11 +121,11 @@ export default function InventoryPage() {
                     setTab(t.value);
                     setPage(1);
                   }}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                    tab === t.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all ${
+                    tab === t.value ? 'bg-emerald-600 text-white shadow-md' : 'border border-gray-200 bg-white text-gray-600 hover:border-emerald-200 hover:bg-emerald-50'
                   }`}
                 >
-                  {t.label}
+                  {t.icon && <t.icon size={14} />}{t.label}
                 </button>
               ))}
             </div>
@@ -154,7 +153,7 @@ export default function InventoryPage() {
           </div>
 
           {loading ? (
-            <p className="text-sm text-gray-500 py-8 text-center">Loading listings…</p>
+            <PageLoadingCard message="Loading listings…" />
           ) : (
             <div className="overflow-x-auto rounded-xl border border-gray-100">
               <table className="min-w-full text-sm">

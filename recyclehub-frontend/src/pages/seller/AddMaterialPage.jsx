@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import SellerLayout from '../../layouts/SellerLayout';
+import ModernPageHeader from '../../components/ui/ModernPageHeader';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import FileUpload from '../../components/ui/FileUpload';
@@ -52,14 +53,14 @@ export default function AddMaterialPage() {
 
   return (
     <SellerLayout>
-      <div className="mx-auto max-w-5xl space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Add Listing</h1>
-          <p className="text-sm text-gray-600">Create a new recycling material listing for buyers.</p>
-        </div>
+      <div className="mx-auto w-full max-w-5xl space-y-8">
+        <ModernPageHeader
+          title="Add listing"
+          description="Create a new recycling material listing for buyers on the marketplace."
+        />
 
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6 lg:grid-cols-3">
-          <div className="space-y-4 rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm lg:col-span-2">
+          <div className="space-y-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-2">
             <Input label="Title" error={errors.title?.message} {...register('title')} />
             <Select label="Material Type" options={MATERIAL_TYPES} error={errors.materialType?.message} {...register('materialType')} />
             <div className="grid grid-cols-2 gap-3">
@@ -123,12 +124,16 @@ export default function AddMaterialPage() {
           </div>
 
           <div className="space-y-4">
-            <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
               <h2 className="mb-3 font-semibold text-gray-900">Photos</h2>
               <FileUpload multiple maxFiles={5} onFileSelect={setImages} />
             </div>
-            <button type="submit" disabled={loading} className="w-full rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white">
-              {loading ? 'Saving...' : 'Save Listing'}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 disabled:opacity-50"
+            >
+              {loading ? 'Saving…' : 'Save listing'}
             </button>
           </div>
         </form>
