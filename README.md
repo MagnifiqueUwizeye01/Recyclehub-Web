@@ -108,7 +108,6 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 **Terminal 1 — API**
 
-```bash
 cd RecycleHub.API
 dotnet run
 
@@ -117,6 +116,8 @@ cd recyclehub-frontend
 npm install
 npm run dev
 
+
+```bash
 Open the URL Vite prints (often http://localhost:5173). Keep the API running; if you change ports, align CORS in the API with your front-end origin and update VITE_API_BASE_URL.
 
 📖 Optional: With the API running, visit the Swagger UI if enabled in your environment to explore REST routes interactively.
