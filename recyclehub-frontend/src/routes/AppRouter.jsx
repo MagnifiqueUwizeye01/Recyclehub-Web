@@ -16,8 +16,6 @@ import MaterialDetailPage from '../pages/buyer/MaterialDetailPage';
 import OrdersPage from '../pages/buyer/OrdersPage';
 import OrderDetailPage from '../pages/buyer/OrderDetailPage';
 import PaymentPage from '../pages/buyer/PaymentPage';
-import ReviewsPage from '../pages/buyer/ReviewsPage';
-
 import SellerDashboard from '../pages/seller/SellerDashboard';
 import InventoryPage from '../pages/seller/InventoryPage';
 import AddMaterialPage from '../pages/seller/AddMaterialPage';
@@ -25,6 +23,7 @@ import EditMaterialPage from '../pages/seller/EditMaterialPage';
 import SellerOrdersPage from '../pages/seller/SellerOrdersPage';
 import SellerOrderDetailPage from '../pages/seller/SellerOrderDetailPage';
 import SellerAnalyticsPage from '../pages/seller/SellerAnalyticsPage';
+import SellerReportsPage from '../pages/seller/SellerReportsPage';
 
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import UserManagementPage from '../pages/admin/UserManagementPage';
@@ -140,17 +139,6 @@ export default function AppRouter() {
         }
       />
       <Route
-        path="/buyer/reviews"
-        element={
-          <PrivateRoute redirectGuestToBuyerRegister>
-            <RoleRoute allowedRoles={['Buyer']}>
-              <ReviewsPage />
-            </RoleRoute>
-          </PrivateRoute>
-        }
-      />
-
-      <Route
         path="/seller/dashboard"
         element={
           <PrivateRoute>
@@ -216,6 +204,16 @@ export default function AppRouter() {
           <PrivateRoute>
             <RoleRoute allowedRoles={['Seller']}>
               <SellerAnalyticsPage />
+            </RoleRoute>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/seller/reports"
+        element={
+          <PrivateRoute>
+            <RoleRoute allowedRoles={['Seller']}>
+              <SellerReportsPage />
             </RoleRoute>
           </PrivateRoute>
         }

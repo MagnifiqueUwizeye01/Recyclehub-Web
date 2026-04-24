@@ -14,7 +14,6 @@ export const ROUTES = {
   BUYER_ORDER_DETAIL: '/buyer/orders/:id',
   BUYER_PAYMENT: '/buyer/payment/:orderId',
   BUYER_SMARTSWAP: '/buyer/smartswap',
-  BUYER_REVIEWS: '/buyer/reviews',
 
   SELLER_DASHBOARD: '/seller/dashboard',
   SELLER_INVENTORY: '/seller/inventory',
