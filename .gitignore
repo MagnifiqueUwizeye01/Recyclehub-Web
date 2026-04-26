@@ -19,6 +19,7 @@
 *.log
 *.tmp
 **/errors.json
+*.zip
 
 # API uploads (local dev only — do not version user uploads)
 RecycleHub.API/wwwroot/uploads/

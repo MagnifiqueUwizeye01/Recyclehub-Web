@@ -81,6 +81,14 @@ export function mapCurrentUserDto(dto) {
 }
 
 export function getApiErrorMessage(err) {
+  if (!err?.response && err?.code !== 'ERR_CANCELED') {
+    return 'Cannot reach the API. Check your connection, or ask the team to allow this site in API CORS settings.';
+  }
+  if (err?.response?.status >= 500) {
+    const d = err.response.data;
+    if (typeof d?.message === 'string' && d.message.trim()) return d.message;
+    return 'The server returned an error. Please try again in a moment.';
+  }
   const d = err?.response?.data;
   if (typeof d?.message === 'string' && d.message.trim()) return d.message;
   // ApiResponse<T>.Errors

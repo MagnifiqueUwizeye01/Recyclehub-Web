@@ -1,9 +1,10 @@
 import axios from 'axios';
+import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config/env';
 import { getAuthToken, clearAuthSession } from '../utils/authStorage';
 
 const api = axios.create({
-  baseURL: API_BASE_URL || 'http://localhost:5123/api',
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -23,8 +24,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
-      const path = err.config?.url || '';
+    const status = err.response?.status;
+    const path = err.config?.url || '';
+
+    if (status === 401) {
       const isAuthAttempt =
         path.includes('/auth/login') ||
         path.includes('/auth/register') ||
@@ -35,6 +38,14 @@ api.interceptors.response.use(
         window.location.href = '/login';
       }
     }
+
+    // No HTTP response: offline, DNS, or browser blocked the request (often CORS preflight).
+    if (!err.response && err.code !== 'ERR_CANCELED') {
+      toast.error('Cannot reach the API. Check your connection, or CORS on the server.', {
+        id: 'recyclehub-api-network',
+      });
+    }
+
     return Promise.reject(err);
   },
 );
