@@ -39,7 +39,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 | **Sellers** | **Inventory** management (add/edit materials, images), **orders** from buyers, **analytics** on their activity, and **reports** they file for support or moderation. |
 | **Admins** | **User, buyer, and seller** oversight, **orders** and **payments** overviews, **review** moderation, **platform analytics**, **configuration**, **certificate** request handling, and **reports** from the community for action. |
 
-> 💡 **Everyone** with an account gets **profile and settings**, **private messaging**, and **notifications** (backed by **SignalR** in real time when the app is connected).
+>  **Everyone** with an account gets **profile and settings**, **private messaging**, and **notifications** (backed by **SignalR** in real time when the app is connected).
 
 ---
 
