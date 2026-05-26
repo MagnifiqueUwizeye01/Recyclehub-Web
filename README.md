@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>♻️ RecycleHub</h1>
+<h1>♻️ RecycleHub</h1>  
 
 <p><strong>Where recycled materials meet real business.</strong></p>
 
