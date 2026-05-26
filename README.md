@@ -106,7 +106,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ##  Run locally
 
-**Terminal 1 — API**
+**Terminal 1 — API**  
 
 cd RecycleHub.API  
 
