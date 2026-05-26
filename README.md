@@ -60,7 +60,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ---
 
-## Tech stack       
+## Tech stack         
 
 | Layer | Technology |
 |:------|:------------|
