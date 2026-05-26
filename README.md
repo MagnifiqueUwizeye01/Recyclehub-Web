@@ -108,7 +108,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 **Terminal 1 — API**
 
-cd RecycleHub.API
+cd RecycleHub.API 
 
 dotnet run
 
