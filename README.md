@@ -82,7 +82,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ---
 
-## Prerequisites
+## Prerequisites  
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Node.js](https://nodejs.org/) (LTS) and npm
