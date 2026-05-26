@@ -95,7 +95,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 ### API
 
 1. Set `ConnectionStrings:DefaultConnection` in `appsettings.Development.json` or use [user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) so secrets are never committed.
-2. Complete **JWT** and **PawaPay** (and any **email/SMTP** for OTP) sections as in `appsettings.json` — use empty placeholders locally and real values only in your own machine or deployment environment.
+2. Complete **JWT** and **PawaPay** (and any **email/SMTP** for OTP) sections as in `appsettings.json` — use empty placeholders locally and real values only in your own machine or deployment environment.  
 
 ### Frontend
 
