@@ -45,7 +45,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ##  How it works (architecture at a glance)
 
-[ React SPA ] --HTTPS + JWT--> [ RecycleHub.API ] --EF Core--> [ SQL Server ]
+[ React SPA ] --HTTPS + JWT--> [ RecycleHub.API ] --EF Core--> [ SQL Server ]   
 ^ |
 +-------- SignalR (notifications)
 
@@ -56,7 +56,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 3. **Real time** — **SignalR** hubs deliver live **notifications** to connected clients (with JWT passed for WebSocket connections).
 
-4. **Files** — Material images and uploads are served from the API's `wwwroot` (local dev); in production you would point storage to a persistent or cloud-backed location.
+4. **Files** — Material images and uploads are served from the API's `wwwroot` (local dev); in production you would point storage to a persistent or cloud-backed location.   
 
 ---
 
