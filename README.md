@@ -22,7 +22,7 @@ and under control—one web app, one API, one database.
 
 ---
 
-##  Why RecycleHub exists
+##  Why RecycleHub exists  
 
 Waste is **not only an environmental problem**; it is also a **coordination problem**. Businesses that *have* usable scrap, offcuts, or processed recyclables often struggle to find reliable buyers. Buyers who *need* those materials at a fair price and with traceability do not always know where to look. 
 
