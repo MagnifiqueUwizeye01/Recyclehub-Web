@@ -74,7 +74,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 | Path | Description |
 |:-----|:-------------|
-| `RecycleHub.API/` | Web API, EF `DbContext`, services, SignalR hubs, controllers |
+| `RecycleHub.API/` | Web API, EF `DbContext`, services, SignalR hubs, controllers | 
 | `recyclehub-frontend/` | Vite + React SPA (public, buyer, seller, admin, shared routes) |
 | `Tools/PasswordHash/` | Optional console helper for generating password hashes in development |
 | `Tools/team-commit-sequence.ps1` | One-off script some teams use for batch commits (optional) |
