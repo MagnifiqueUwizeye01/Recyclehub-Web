@@ -91,7 +91,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 ---
 
 ##  Configuration
-
+ 
 ### API
 
 1. Set `ConnectionStrings:DefaultConnection` in `appsettings.Development.json` or use [user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) so secrets are never committed.
