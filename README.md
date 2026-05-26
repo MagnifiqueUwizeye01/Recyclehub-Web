@@ -100,7 +100,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 ### Frontend
 
 1. From `recyclehub-frontend/`, copy `.env.example` to `.env.development` (or `.env`).
-2. Set `VITE_API_BASE_URL` to your running API (the example points at a typical local dev URL).
+2. Set `VITE_API_BASE_URL` to your running API (the example points at a typical local dev URL). 
 
 ---
 
