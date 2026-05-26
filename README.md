@@ -47,7 +47,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 [ React SPA ] --HTTPS + JWT--> [ RecycleHub.API ] --EF Core--> [ SQL Server ]   
 ^ |
-+-------- SignalR (notifications)
++-------- SignalR (notifications)  
 
 
 1. **Browser (React + Vite)** — A single-page app with **role-based routes** (public, buyer, seller, admin, and shared areas like messages). The UI talks to the API over HTTPS using **JWT** tokens after login/register.
