@@ -69,7 +69,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 | **Payments** | PawaPay integration (configure via `appsettings` / user secrets) |  
 
 ---
-
+  
 ##  Repository layout
 
 | Path | Description |
