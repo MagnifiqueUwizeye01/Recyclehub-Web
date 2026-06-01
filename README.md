@@ -32,7 +32,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ## What the system does (in plain language)         
  
-| Who | What they get |
+| Who | What they get |   
 |:----|:---------------|
 | **Visitors** | Browse a public landing and material detail pages; see what is on offer before signing up. |
 | **Buyers** | A **marketplace** to explore materials, place **orders**, pay through integrated **mobile money (PawaPay)**, track order status, use **SmartSwap**-style matching for relevant offers, and message sellers. |
