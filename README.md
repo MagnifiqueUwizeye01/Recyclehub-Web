@@ -43,7 +43,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ---
 
-##  How it works (architecture at a glance)  
+##  How it works (architecture at a glance)    
 
 [ React SPA ] --HTTPS + JWT--> [ RecycleHub.API ] --EF Core--> [ SQL Server ]      
 ^ |
