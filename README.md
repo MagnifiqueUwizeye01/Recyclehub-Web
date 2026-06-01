@@ -34,7 +34,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
  
 | Who | What they get |   
 |:----|:---------------|
-| **Visitors** | Browse a public landing and material detail pages; see what is on offer before signing up. |
+| **Visitors** | Browse a public landing and material detail pages; see what is on offer before signing up. |  
 | **Buyers** | A **marketplace** to explore materials, place **orders**, pay through integrated **mobile money (PawaPay)**, track order status, use **SmartSwap**-style matching for relevant offers, and message sellers. |
 | **Sellers** | **Inventory** management (add/edit materials, images), **orders** from buyers, **analytics** on their activity, and **reports** they file for support or moderation. |
 | **Admins** | **User, buyer, and seller** oversight, **orders** and **payments** overviews, **review** moderation, **platform analytics**, **configuration**, **certificate** request handling, and **reports** from the community for action. |
