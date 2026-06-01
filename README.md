@@ -84,7 +84,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 
 ## Prerequisites  
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)  
 - [Node.js](https://nodejs.org/) (LTS) and npm
 - **SQL Server** (LocalDB or a full instance) and a database the API can use       
 
