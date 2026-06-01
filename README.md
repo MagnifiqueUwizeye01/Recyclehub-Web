@@ -72,7 +72,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
   
 ##  Repository layout
 
-| Path | Description |
+| Path | Description | 
 |:-----|:-------------|
 | `RecycleHub.API/` | Web API, EF `DbContext`, services, SignalR hubs, controllers | 
 | `recyclehub-frontend/` | Vite + React SPA (public, buyer, seller, admin, shared routes) |
