@@ -78,7 +78,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 | `recyclehub-frontend/` | Vite + React SPA (public, buyer, seller, admin, shared routes) |
 | `Tools/PasswordHash/` | Optional console helper for generating password hashes in development |
 | `Tools/team-commit-sequence.ps1` | One-off script some teams use for batch commits (optional) |
-| `RecycleHub.API/Database/` | Reference **SQL** scripts to align a database with the model when needed |
+| `RecycleHub.API/Database/` | Reference **SQL** scripts to align a database with the model when needed |  
 
 ---
 
