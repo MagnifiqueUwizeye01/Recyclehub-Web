@@ -118,7 +118,7 @@ cd recyclehub-frontend
 
 npm install
 
-npm run dev
+npm run dev 
 
 
 ```bash
