@@ -67,7 +67,7 @@ Waste is **not only an environmental problem**; it is also a **coordination prob
 | **Frontend** | React 19, Vite 8, React Router, Tailwind CSS, Axios, SignalR client, React Hook Form, Zod |   
 | **Backend** | ASP.NET Core 8, EF Core 8, SQL Server, JWT Bearer, SignalR, Swashbuckle (Swagger), BCrypt, MailKit |
 | **Payments** | PawaPay integration (configure via `appsettings` / user secrets) |
-
+ 
 ---
   
 ##  Repository layout
