@@ -2,7 +2,7 @@
 
 <h1>♻️ RecycleHub</h1>  
 
-<p><strong>Where recycled materials meet real business.</strong></p>       
+<p><strong>Where recycled materials meet real business.</strong></p>  
  
 <p>
 RecycleHub is a full-stack B2B-style marketplace that helps <strong>sellers</strong> list surplus and recycled materials,  
