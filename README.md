@@ -13,7 +13,7 @@ and under control—one web app, one API, one database.
 <p>
 <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react" alt="React 19">
 <img src="https://img.shields.io/badge/.NET-8-512BD4?style=flat-square&logo=dotnet" alt=".NET 8">
-<img src="https://img.shields.io/badge/SQL_Server-CC2927?style=flat-square&logo=microsoft-sql-server" alt="SQL Server">
+<img src="https://img.shields.io/badge/SQL_Server-CC2927?style=flat-square&logo=microsoft-sql-server" alt="SQL Server"> 
 <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css" alt="Tailwind CSS">
 <img src="https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite" alt="Vite">  
 </p>
