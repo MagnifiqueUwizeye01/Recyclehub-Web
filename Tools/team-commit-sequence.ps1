@@ -4,10 +4,10 @@ Set-Location $PSScriptRoot\..
 $ErrorActionPreference = 'Stop'
 $team = @(
   @{ n = 'UwizeyeMagnifique';         e = 'uwizeyemagnifique@gmail.com' },
-  @{ n = 'Welvarine';                 e = 'Welvarine182754559+Welvarine@users.noreply.github.com' },
-  @{ n = 'lington-123';                e = 'lington-123181227239+lington-123@users.noreply.github.com' },
-  @{ n = 'Belise201';                 e = 'Belise201191963151+Belise201@users.noreply.github.com' },
-  @{ n = 'Raissa427';                 e = 'Raissa427183736564+Raissa427@users.noreply.github.com' }
+  @{ n = 'Welvarine';                 e = 'guwera04@gmail.com' },
+  @{ n = 'lington-123';                e = 'shemapato100@gmail.com' },
+  @{ n = 'Belise201';                 e = 'inezabelyse984@gmail.com' },
+  @{ n = 'Raissa427';                 e = 'numubyeyiirumvaraissa@gmail.com' }
 )
 $script:commitIdx = 0
 function Git-TeamCommit([string] $message, $paths) {
