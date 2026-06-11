@@ -12,9 +12,25 @@
 
 <br/>
 
-<p>RecycleHub is a full-stack B2B marketplace for Rwanda and beyond. <strong>Sellers</strong> list surplus and recycled materials,
-<strong>buyers</strong> discover and order what they need, and <strong>admins</strong> keep the platform fair, verified, and under control —
-one React app, one .NET API, one SQL Server database.</p>
+<p>
+<strong>RecycleHub</strong> is a B2B marketplace for Rwanda and beyond. It connects businesses that have surplus or recycled materials
+(plastics, metals, paper, industrial by-products) with buyers who need them — with verified listings, order tracking, in-app messaging,
+and mobile-money checkout so every deal is traceable, not a guess.
+</p>
+
+<p>
+<strong>Sellers</strong> publish inventory and fulfill orders. <strong>Buyers</strong> browse the marketplace, purchase materials, and pay through PawaPay.
+<strong>Admins</strong> verify accounts, moderate reviews and reports, and monitor platform health — all from dedicated role-based workspaces.
+</p>
+
+<p>
+<em>Developed using</em>
+<strong>JavaScript (ES modules)</strong>, <strong>React 19</strong>, <strong>Vite</strong>, <strong>React Router</strong>, <strong>Tailwind CSS</strong>,
+<strong>Axios</strong>, <strong>React Hook Form</strong>, and <strong>Zod</strong> on the frontend;
+<strong>C#</strong>, <strong>ASP.NET Core 8</strong>, <strong>Entity Framework Core 8</strong>, <strong>SQL Server</strong>, <strong>JWT Bearer authentication</strong>,
+<strong>SignalR</strong>, <strong>BCrypt</strong>, <strong>MailKit</strong>, and <strong>Swagger</strong> on the backend;
+and <strong>PawaPay</strong> for MTN MoMo payments in Rwanda.
+</p>
 
 <br/>
 
