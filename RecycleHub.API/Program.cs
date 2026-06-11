@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using RecycleHub.API.Common.Constants;
+using RecycleHub.API.Common.Enums;
 using RecycleHub.API.Common.Settings;
 using RecycleHub.API.Data;
 using RecycleHub.API.Helpers;
 using RecycleHub.API.Hubs;
 using RecycleHub.API.Middleware;
+using RecycleHub.API.Models;
 using RecycleHub.API.Services;
 using RecycleHub.API.Services.Interfaces;
 
@@ -103,25 +105,30 @@ builder.Services.AddControllers()
     });
 
 // ════════════════════════════════════════════════════════════════════════════
-// 6. CORS
+// 6. CORS (single policy: AllowFrontend — also used by UseCors / SignalR)
 // ════════════════════════════════════════════════════════════════════════════
-var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
-    ?.Where(o => !string.IsNullOrWhiteSpace(o))
-    .Distinct(StringComparer.OrdinalIgnoreCase)
-    .ToArray() ?? Array.Empty<string>();
-if (corsOrigins.Length == 0)
+var corsSection = builder.Configuration.GetSection("Cors:AllowedOrigins");
+var corsOriginSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+foreach (var v in corsSection.GetChildren()
+             .Select(c => c.Value)
+             .Where(v => !string.IsNullOrWhiteSpace(v)))
+    corsOriginSet.Add(v!);
+if (corsSection.Get<string[]>() is { Length: > 0 } fromJson)
 {
-    corsOrigins =
-    [
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174",
-        "http://127.0.0.1:5500",
-        "http://localhost:5500"
-    ];
+    foreach (var v in fromJson)
+        if (!string.IsNullOrWhiteSpace(v))
+            corsOriginSet.Add(v);
 }
+if (corsOriginSet.Count == 0)
+{
+    foreach (var v in new[]
+             {
+                 "http://localhost:3000", "http://localhost:5173", "http://localhost:5174",
+                 "http://127.0.0.1:5173", "http://127.0.0.1:5174", "http://127.0.0.1:5500", "http://localhost:5500"
+             })
+        corsOriginSet.Add(v);
+}
+string[] corsOrigins = corsOriginSet.ToArray();
 
 builder.Services.AddCors(options =>
 {
@@ -216,7 +223,15 @@ builder.Services.AddScoped<ISmartSwapMatchService, SmartSwapMatchService>();
 // ════════════════════════════════════════════════════════════════════════════
 var app = builder.Build();
 
-// ── Database connectivity (schema: Scripts/RecycleHubDB_Tables.sql) ─────
+if (app.Environment.IsDevelopment())
+{
+    var corsLog = app.Services.GetRequiredService<ILogger<Program>>();
+    corsLog.LogInformation("Cors:AllowedOrigins — using {Count} value(s): {List}", corsOrigins.Length, string.Join(", ", corsOrigins));
+}
+
+// ── Database connectivity + default admin seed (idempotent) ───────────
+const string DefaultAdminEmail  = "admin@recyclehub.com";
+const string DefaultAdminUserName = "admin";
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -225,9 +240,47 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<AppDbContext>();
         if (!await context.Database.CanConnectAsync())
+        {
             logger.LogWarning("Cannot connect to RecycleHub database — check connection string and that RecycleHubDB exists.");
+        }
         else
+        {
             logger.LogInformation("RecycleHub database connection OK.");
+
+            if (!await context.Users.AnyAsync(u => u.Role == UserRole.Admin))
+            {
+                if (await context.Users.AnyAsync(u => u.Email == DefaultAdminEmail))
+                {
+                    logger.LogWarning(
+                        "No Admin role user found, but email {Email} is already taken. Skipping default admin seed.",
+                        DefaultAdminEmail);
+                }
+                else if (await context.Users.AnyAsync(u => u.Username == DefaultAdminUserName))
+                {
+                    logger.LogWarning(
+                        "No Admin role user found, but username {Username} is already taken. Skipping default admin seed.",
+                        DefaultAdminUserName);
+                }
+                else
+                {
+                    var admin = new User
+                    {
+                        Username  = DefaultAdminUserName,
+                        FirstName = "System",
+                        LastName  = "Admin",
+                        Email     = DefaultAdminEmail,
+                        Gender    = Gender.Male,
+                        Role      = UserRole.Admin,
+                        Status    = UserStatus.Active,
+                        PasswordHash = PasswordHasher.Hash("Admin@123"),
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    context.Users.Add(admin);
+                    await context.SaveChangesAsync();
+                    logger.LogInformation("Seeded default admin user ({Email}). Change the password in production.", DefaultAdminEmail);
+                }
+            }
+        }
     }
     catch (Exception ex)
     {
