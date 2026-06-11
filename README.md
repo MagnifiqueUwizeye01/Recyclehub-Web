@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0a2e1a,50:1a5c2e,100:2d8653&height=200&section=header&text=RecycleHub&fontSize=72&fontColor=ffffff&fontAlignY=38&desc=Where%20recycled%20materials%20meet%20real%20business.&descSize=18&descAlignY=60&descColor=a8d5b5&animation=fadeIn" width="100%"/> 
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0a2e1a,50:1a5c2e,100:2d8653&height=200&section=header&text=RecycleHub&fontSize=72&fontColor=ffffff&fontAlignY=38&desc=Where%20recycled%20materials%20meet%20real%20business.&descSize=18&descAlignY=60&descColor=a8d5b5&animation=fadeIn" width="100%"/>
 
 <br/>
 
@@ -82,7 +82,7 @@ A visual walkthrough of RecycleHub across every role and experience.
 The landing page shows a compact hero and live listings so visitors see materials immediately.
 
 <div align="center">
-<img src="Screenshots/Homepage.png" alt="RecycleHub public homepage" width="90%" />
+<img src="Screenshots/Homepage.png" alt="RecycleHub public homepage" width="92%" />
 </div>
 
 <br/>
@@ -95,7 +95,7 @@ Buyers browse verified listings, open material details, place orders, and pay th
 
 <table width="100%">
 <tr>
-<td width="33%" align="center" valign="top">
+<td width="50%" align="center" valign="top">
 
 **Marketplace**
 
@@ -104,7 +104,7 @@ Buyers browse verified listings, open material details, place orders, and pay th
 <sub>Browse and discover verified recycled material listings.</sub>
 
 </td>
-<td width="33%" align="center" valign="top">
+<td width="50%" align="center" valign="top">
 
 **Checkout Flow**
 
@@ -113,11 +113,16 @@ Buyers browse verified listings, open material details, place orders, and pay th
 <sub>Review order details and confirm the purchase.</sub>
 
 </td>
-<td width="33%" align="center" valign="top">
+</tr>
+</table>
+
+<table width="100%">
+<tr>
+<td align="center" valign="top">
 
 **Payment**
 
-<img src="Screenshots/Buyer%20payment.png" alt="Buyer payment" width="100%" />
+<img src="Screenshots/Buyer%20payment.png" alt="Buyer payment" width="92%" />
 
 <sub>Complete payment via PawaPay mobile money integration.</sub>
 
@@ -135,7 +140,7 @@ Sellers manage listings, review incoming orders, and track performance from a de
 
 <table width="100%">
 <tr>
-<td width="33%" align="center" valign="top">
+<td width="50%" align="center" valign="top">
 
 **Dashboard**
 
@@ -144,7 +149,7 @@ Sellers manage listings, review incoming orders, and track performance from a de
 <sub>Overview of revenue, activity, and performance metrics.</sub>
 
 </td>
-<td width="33%" align="center" valign="top">
+<td width="50%" align="center" valign="top">
 
 **Listings**
 
@@ -153,11 +158,16 @@ Sellers manage listings, review incoming orders, and track performance from a de
 <sub>Create and manage material listings with pricing and stock.</sub>
 
 </td>
-<td width="33%" align="center" valign="top">
+</tr>
+</table>
+
+<table width="100%">
+<tr>
+<td align="center" valign="top">
 
 **Orders from Buyers**
 
-<img src="Screenshots/Seller-orders-from-buyers.png" alt="Seller orders" width="100%" />
+<img src="Screenshots/Seller-orders-from-buyers.png" alt="Seller orders" width="92%" />
 
 <sub>Review, accept, and fulfill incoming buyer orders.</sub>
 
@@ -175,7 +185,7 @@ Admins monitor users, verify sellers, and review platform-wide analytics.
 
 <table width="100%">
 <tr>
-<td width="33%" align="center" valign="top">
+<td width="50%" align="center" valign="top">
 
 **User Management**
 
@@ -184,7 +194,7 @@ Admins monitor users, verify sellers, and review platform-wide analytics.
 <sub>View, verify, and manage all registered platform users.</sub>
 
 </td>
-<td width="33%" align="center" valign="top">
+<td width="50%" align="center" valign="top">
 
 **Seller Management**
 
@@ -193,11 +203,16 @@ Admins monitor users, verify sellers, and review platform-wide analytics.
 <sub>Approve sellers, review profiles, and enforce platform standards.</sub>
 
 </td>
-<td width="33%" align="center" valign="top">
+</tr>
+</table>
+
+<table width="100%">
+<tr>
+<td align="center" valign="top">
 
 **Platform Analytics**
 
-<img src="Screenshots/Admin-analytics.png" alt="Admin analytics" width="100%" />
+<img src="Screenshots/Admin-analytics.png" alt="Admin analytics" width="92%" />
 
 <sub>System-wide data on orders, revenue, users, and activity.</sub>
 
@@ -214,7 +229,7 @@ Admins monitor users, verify sellers, and review platform-wide analytics.
 Buyers, sellers, and admins can message each other in-app for order follow-up and support.
 
 <div align="center">
-<img src="Screenshots/Messaging-system.png" alt="Messaging system" width="90%" />
+<img src="Screenshots/Messaging-system.png" alt="Messaging system" width="92%" />
 </div>
 
 <br/>
