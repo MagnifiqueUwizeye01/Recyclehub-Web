@@ -184,7 +184,7 @@ Open **http://127.0.0.1:5173**. Keep both processes running. Swagger is availabl
 | Belise201 | Admin & moderation features |
 | Raissa427 | Buyer/seller flows & payments |
 
-Work on feature branches; merge to `main` via pull requests with clear commit messages.
+
 
 ---
 
