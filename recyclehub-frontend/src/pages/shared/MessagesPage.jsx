@@ -88,20 +88,14 @@ function MessagesChat() {
   const [newChatResults, setNewChatResults] = useState([]);
   const [newChatSearching, setNewChatSearching] = useState(false);
   const [typing, setTyping] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
   const [showChatMenu, setShowChatMenu] = useState(false);
-  const [messageMenuOpen, setMessageMenuOpen] = useState(null);
   const [replyingTo, setReplyingTo] = useState(null);
-  const [pinnedMessages, setPinnedMessages] = useState([]);
-  const [searchMessages, setSearchMessages] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
   const [muted, setMuted] = useState(false);
-  
+
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const pendingProductIntroRef = useRef(null);
   const fileInputRef = useRef(null);
-  const searchInputRef = useRef(null);
 
   const myId = user?.userId ?? user?.id;
 
@@ -689,7 +683,11 @@ function MessagesChat() {
                           <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2">
                             <Archive size={14} /> Archive Chat
                           </button>
-                          <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setMuted((m) => !m)}
+                            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
+                          >
                             {muted ? <Bell size={14} /> : <BellOff size={14} />}
                             {muted ? 'Unmute' : 'Mute'} Notifications
                           </button>
@@ -802,19 +800,6 @@ function MessagesChat() {
                       })}
                       <div ref={messagesEndRef} />
                     </>
-                  )}
-                  
-                  {/* Typing Indicator */}
-                  {isTyping && (
-                    <div className="flex justify-start">
-                      <div className="bg-gray-100 rounded-2xl rounded-bl-sm px-4 py-2">
-                        <div className="flex gap-1">
-                          <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                          <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                          <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                        </div>
-                      </div>
-                    </div>
                   )}
                 </div>
 
