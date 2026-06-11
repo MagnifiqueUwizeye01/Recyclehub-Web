@@ -37,7 +37,7 @@ export default function BuyerLayout({ children }) {
           className="mt-navbar !z-40"
         />
         <div className="app-shell-main app-shell-main--nav lg:ml-sidebar">
-          <main className="page-container flex-1 py-6 md:py-10 animate-fade-in">{children}</main>
+          <main className="page-container flex-1 py-4 md:py-6 animate-fade-in">{children}</main>
           <DashboardFooter />
         </div>
       </div>
