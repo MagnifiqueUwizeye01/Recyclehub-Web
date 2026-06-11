@@ -76,14 +76,19 @@ namespace RecycleHub.API.Services
             if (await _db.Payments.AnyAsync(p => p.OrderId == dto.OrderId && p.PaymentStatus == PaymentStatus.Successful))
                 return (false, "Order is already paid.", null);
 
-            var existingOpen = await _db.Payments
-                .FirstOrDefaultAsync(p => p.OrderId == dto.OrderId && p.PaymentStatus == PaymentStatus.Requested);
-            if (existingOpen != null && existingOpen.RequestedAt > DateTime.UtcNow.AddHours(-1))
+            // One row per order (IX_Payments_OrderId is unique) — never insert a second row on retry.
+            var existing = await _db.Payments.FirstOrDefaultAsync(p => p.OrderId == dto.OrderId);
+            if (existing != null && existing.BuyerUserId != buyerUserId)
+                return (false, "Unauthorized.", null);
+
+            if (existing != null
+                && existing.PaymentStatus == PaymentStatus.Requested
+                && existing.RequestedAt > DateTime.UtcNow.AddHours(-1))
             {
-                await _db.Entry(existingOpen).Reference(p => p.BuyerUser).LoadAsync();
-                await _db.Entry(existingOpen).Reference(p => p.Order).LoadAsync();
-                await _db.Entry(existingOpen.Order).Reference(o => o.Material).LoadAsync();
-                return (true, "A payment is already in progress for this order.", ToDto(existingOpen));
+                await _db.Entry(existing).Reference(p => p.BuyerUser).LoadAsync();
+                await _db.Entry(existing).Reference(p => p.Order).LoadAsync();
+                await _db.Entry(existing.Order).Reference(o => o.Material).LoadAsync();
+                return (true, "A payment is already in progress for this order.", ToDto(existing));
             }
 
             var phone = NormalizeRwandaPhone(dto.PhoneNumber);
@@ -93,21 +98,40 @@ namespace RecycleHub.API.Services
             var provider = ResolveProvider(dto.PaymentChannel);
             var depositId = Guid.NewGuid();
 
-            var payment = new Payment
+            Payment payment;
+            if (existing != null)
             {
-                OrderId = dto.OrderId,
-                BuyerUserId = buyerUserId,
-                Amount = order.TotalAmount,
-                PaymentMethod = "MobileMoney",
-                PhoneNumber = phone,
-                Currency = dto.Currency,
-                ExternalReference = depositId.ToString("D"),
-                PaymentStatus = PaymentStatus.Requested,
-                RequestMessage = dto.RequestMessage,
-                RequestedAt = DateTime.UtcNow,
-                CreatedAt = DateTime.UtcNow
-            };
-            _db.Payments.Add(payment);
+                // Reuse the row after a failed / expired / stale attempt (same order only).
+                payment = existing;
+                payment.Amount = order.TotalAmount;
+                payment.PhoneNumber = phone;
+                payment.Currency = dto.Currency;
+                payment.ExternalReference = depositId.ToString("D");
+                payment.PaymentStatus = PaymentStatus.Requested;
+                payment.RequestMessage = dto.RequestMessage;
+                payment.FailureReason = null;
+                payment.RequestedAt = DateTime.UtcNow;
+                payment.UpdatedAt = DateTime.UtcNow;
+            }
+            else
+            {
+                payment = new Payment
+                {
+                    OrderId = dto.OrderId,
+                    BuyerUserId = buyerUserId,
+                    Amount = order.TotalAmount,
+                    PaymentMethod = "MobileMoney",
+                    PhoneNumber = phone,
+                    Currency = dto.Currency,
+                    ExternalReference = depositId.ToString("D"),
+                    PaymentStatus = PaymentStatus.Requested,
+                    RequestMessage = dto.RequestMessage,
+                    RequestedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.UtcNow
+                };
+                _db.Payments.Add(payment);
+            }
+
             await _db.SaveChangesAsync();
 
             var (ok, msg, initStatus) = await _pawaPay.InitiateDepositAsync(
