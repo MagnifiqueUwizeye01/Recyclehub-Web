@@ -21,7 +21,7 @@ export default function PublicLayout() {
         <main
           className={
             isHome
-              ? 'flex-1 min-w-0 w-full bg-white'
+              ? 'flex-1 min-w-0 w-full bg-[#f6f4ef]'
               : 'flex-1 min-w-0 px-4 md:px-6 lg:px-8 py-6 bg-hub-section'
           }
         >
