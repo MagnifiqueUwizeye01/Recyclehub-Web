@@ -74,7 +74,7 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout>
-      <div className="w-full space-y-8">
+      <div className="w-full space-y-6">
         <ModernPageHeader
           title="Admin dashboard"
           description="Platform health, verifications, and payment activity at a glance."
@@ -95,7 +95,7 @@ export default function AdminDashboard() {
 
         {!loading && !error && (
           <>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <DashboardStatCard
                 icon={Users}
                 label="Total users"
