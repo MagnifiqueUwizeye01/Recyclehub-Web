@@ -1,17 +1,28 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Package, TrendingUp, ShoppingCart, Wallet } from 'lucide-react';
 import SellerLayout from '../../layouts/SellerLayout';
 import ErrorState from '../../components/ui/ErrorState';
 import ModernPageHeader from '../../components/ui/ModernPageHeader';
-import DashboardStatCard from '../../components/ui/DashboardStatCard';
+import ModernPanel from '../../components/ui/ModernPanel';
 import PageLoadingCard from '../../components/ui/PageLoadingCard';
+import AdminStatStrip from '../../components/admin/AdminStatStrip';
+import DistributionMosaic from '../../components/admin/DistributionMosaic';
 import { getSellerOrders } from '../../api/orders.api';
 import { getSellerMaterials } from '../../api/materials.api';
 import { formatRWF } from '../../utils/formatCurrency';
 import { getPagedItems } from '../../utils/pagedResponse';
 import { normalizeMaterial } from '../../utils/materialMapper';
 import { exportToPDF, exportToExcel } from '../../utils/exportUtils';
-import SimpleBarChart from '../../components/ui/SimpleBarChart';
+
+const ORDER_COLORS = {
+  Pending: '#d97706',
+  Accepted: '#059669',
+  Cancelled: '#64748b',
+  Delivered: '#047857',
+  Shipped: '#2563eb',
+  Paid: '#6d28d9',
+  Rejected: '#dc2626',
+  AwaitingPayment: '#b45309',
+};
 
 export default function SellerAnalyticsPage() {
   const [orders, setOrders] = useState([]);
@@ -47,6 +58,7 @@ export default function SellerAnalyticsPage() {
 
   const delivered = orders.filter((order) => order.status === 'Delivered');
   const revenue = delivered.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+  const activeListings = materials.filter((m) => ['Available', 'Verified'].includes(m.status)).length;
 
   const ordersByStatus = useMemo(() => {
     const map = {};
@@ -66,6 +78,7 @@ export default function SellerAnalyticsPage() {
     ];
     const rows = [
       { metric: 'Total listings (reported)', value: String(materialsTotalCount) },
+      { metric: 'Active listings', value: String(activeListings) },
       { metric: 'Delivered orders', value: String(delivered.length) },
       { metric: 'Revenue (delivered)', value: formatRWF(revenue) },
       ...ordersByStatus.map((r) => ({ metric: `Orders — ${r.name}`, value: String(r.count) })),
@@ -74,11 +87,9 @@ export default function SellerAnalyticsPage() {
     else exportToExcel('Seller analytics', cols, rows, 'seller-analytics');
   };
 
-  const activeListings = materials.filter((m) => ['Available', 'Verified'].includes(m.status)).length;
-
   return (
     <SellerLayout>
-      <div className="w-full space-y-8">
+      <div className="w-full space-y-4">
         <ModernPageHeader
           title="Analytics"
           description="Listings, fulfillment, and revenue from your seller account."
@@ -88,14 +99,14 @@ export default function SellerAnalyticsPage() {
                 <button
                   type="button"
                   onClick={() => runExport('pdf')}
-                  className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
                 >
                   Export PDF
                 </button>
                 <button
                   type="button"
                   onClick={() => runExport('excel')}
-                  className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800 hover:bg-emerald-100"
+                  className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-800 hover:bg-emerald-100"
                 >
                   Export Excel
                 </button>
@@ -103,45 +114,24 @@ export default function SellerAnalyticsPage() {
             ) : null
           }
         />
+
         {loading && <PageLoadingCard message="Loading analytics…" />}
         {!loading && error && <ErrorState title="Unable to load analytics" message={error} onRetry={load} />}
+
         {!loading && !error && (
           <>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-              <DashboardStatCard
-                icon={Package}
-                label="Total listings"
-                value={String(materialsTotalCount)}
-                badge="Catalog"
-                tone="emerald"
-              />
-              <DashboardStatCard
-                icon={TrendingUp}
-                label="Active listings"
-                value={String(activeListings)}
-                badge="Live"
-                tone="cyan"
-              />
-              <DashboardStatCard
-                icon={ShoppingCart}
-                label="Delivered orders"
-                value={String(delivered.length)}
-                badge="Completed"
-                tone="blue"
-              />
-              <DashboardStatCard
-                icon={Wallet}
-                label="Revenue (delivered)"
-                value={formatRWF(revenue)}
-                badge="RWF"
-                tone="violet"
-              />
-            </div>
+            <AdminStatStrip
+              items={[
+                { label: 'Total listings', value: String(materialsTotalCount) },
+                { label: 'Active listings', value: String(activeListings) },
+                { label: 'Delivered orders', value: String(delivered.length) },
+                { label: 'Revenue (delivered)', value: formatRWF(revenue), hint: 'Settled only' },
+              ]}
+            />
 
-            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-              <h2 className="mb-4 text-sm font-semibold text-gray-900">Orders by status</h2>
-              <SimpleBarChart data={ordersByStatus} dataKey="count" nameKey="name" />
-            </div>
+            <ModernPanel title="Orders by status" subtitle="Proportional tile view of your order pipeline">
+              <DistributionMosaic data={ordersByStatus} colorMap={ORDER_COLORS} />
+            </ModernPanel>
           </>
         )}
       </div>
