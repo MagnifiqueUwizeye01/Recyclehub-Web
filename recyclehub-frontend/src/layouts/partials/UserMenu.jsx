@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { User, Settings, Key, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { resolveProfileImageUrl } from '../../utils/assetUrl';
@@ -9,7 +9,6 @@ export default function UserMenu({ variant = 'light' }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };

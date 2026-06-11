@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { Recycle, Search, MessageSquare, Menu, ArrowRight, Loader2, LayoutDashboard } from 'lucide-react';
+import { Recycle, Search, MessageSquare, Menu, Loader2, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { getDashboardPath } from '../../utils/roleGuard';
 import { useMessages } from '../../hooks/useMessages';
@@ -156,18 +156,15 @@ export default function Navbar({ onSidebarToggle, variant = 'fixed' }) {
             </div>
             <div className="hidden sm:block leading-tight">
               <span
-                className={`font-bold text-[1.05rem] tracking-tight ${
+                className={`block font-bold text-[1.05rem] tracking-tight ${
                   isInline ? 'text-white' : 'text-hub-text'
                 }`}
               >
-                Recycle
-                <span className={isInline ? 'font-semibold text-emerald-200/95' : 'font-semibold text-hub-muted'}>
-                  Hub
-                </span>
+                RecycleHub
               </span>
               <span
                 className={`block text-[10px] font-medium uppercase tracking-[0.18em] ${
-                  isInline ? 'text-emerald-300/80' : 'text-hub-muted/90'
+                  isInline ? 'text-white/75' : 'text-hub-text/70'
                 }`}
               >
                 B2B marketplace
@@ -315,10 +312,9 @@ export default function Navbar({ onSidebarToggle, variant = 'fixed' }) {
                   </Link>
                   <Link
                     to="/register"
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50"
+                    className="inline-flex items-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50"
                   >
                     Create account
-                    <ArrowRight size={15} strokeWidth={2.25} className="opacity-90" />
                   </Link>
                 </>
               )
@@ -383,14 +379,13 @@ export default function Navbar({ onSidebarToggle, variant = 'fixed' }) {
                 </Link>
                 <Link
                   to="/register"
-                  className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition-colors ${
+                  className={`inline-flex items-center rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition-colors ${
                     isInline
                       ? 'bg-white text-emerald-950 hover:bg-emerald-50'
                       : 'bg-hub-text text-white hover:bg-emerald-700'
                   }`}
                 >
                   Create account
-                  <ArrowRight size={15} strokeWidth={2.25} className="opacity-90" />
                 </Link>
               </>
             )}
