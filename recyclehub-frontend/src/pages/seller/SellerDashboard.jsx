@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, ShoppingCart, TrendingUp, Plus, RefreshCw, Clock } from 'lucide-react';
+import { Plus, Clock } from 'lucide-react';
 import SellerLayout from '../../layouts/SellerLayout';
 import ErrorState from '../../components/ui/ErrorState';
 import ModernPageHeader from '../../components/ui/ModernPageHeader';
-import DashboardStatCard from '../../components/ui/DashboardStatCard';
 import ModernPanel from '../../components/ui/ModernPanel';
 import PageLoadingCard from '../../components/ui/PageLoadingCard';
+import AdminStatStrip from '../../components/admin/AdminStatStrip';
+import AdminRefreshButton from '../../components/admin/AdminRefreshButton';
+import AdminEmptyState from '../../components/admin/AdminEmptyState';
 import { getSellerMaterials } from '../../api/materials.api';
 import { getSellerOrders, applySellerOrderAction } from '../../api/orders.api';
 import { formatRWF } from '../../utils/formatCurrency';
@@ -79,25 +81,18 @@ export default function SellerDashboard() {
 
   return (
     <SellerLayout>
-      <div className="w-full space-y-8">
+      <div className="w-full space-y-4">
         <ModernPageHeader
           title="Seller dashboard"
           description="Overview of your listings, orders, and revenue."
           actions={
             <>
-              <button
-                type="button"
-                onClick={load}
-                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:border-emerald-200 hover:bg-gray-50"
-              >
-                <RefreshCw size={16} className="text-gray-400" />
-                Refresh
-              </button>
+              <AdminRefreshButton onClick={load} />
               <Link
                 to="/seller/materials/add"
-                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-700"
+                className="inline-flex items-center gap-1.5 rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-emerald-700"
               >
-                <Plus size={18} />
+                <Plus size={14} />
                 Add listing
               </Link>
             </>
@@ -109,93 +104,89 @@ export default function SellerDashboard() {
 
         {!loading && !error && (
           <>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-              <DashboardStatCard
-                icon={Package}
-                label="Total listings"
-                value={stats.totalListings.toLocaleString()}
-                badge="Catalog"
-                tone="emerald"
-              />
-              <DashboardStatCard
-                icon={TrendingUp}
-                label="Active listings"
-                value={stats.activeListings.toLocaleString()}
-                badge="Live"
-                tone="cyan"
-              />
-              <DashboardStatCard
-                icon={ShoppingCart}
-                label="Total orders"
-                value={stats.totalOrders.toLocaleString()}
-                badge="All time"
-                tone="blue"
-              />
-              <DashboardStatCard
-                icon={TrendingUp}
-                label="Revenue (delivered)"
-                value={formatRWF(stats.revenue)}
-                badge="Settled"
-                tone="violet"
-              />
-            </div>
+            <AdminStatStrip
+              items={[
+                { label: 'Total listings', value: stats.totalListings.toLocaleString() },
+                { label: 'Active listings', value: stats.activeListings.toLocaleString() },
+                { label: 'Total orders', value: stats.totalOrders.toLocaleString() },
+                { label: 'Revenue (delivered)', value: formatRWF(stats.revenue) },
+              ]}
+            />
 
-            <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid gap-4 lg:grid-cols-2">
               <ModernPanel
                 title="Pending orders"
                 subtitle="Accept or reject new buyer requests."
                 headerRight={
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-800">
-                    <Clock size={14} />
-                    {pendingOrders.length} open
-                  </span>
+                  pendingOrders.length > 0 ? (
+                    <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-800">
+                      <Clock size={12} />
+                      {pendingOrders.length} open
+                    </span>
+                  ) : null
                 }
               >
                 {pendingOrders.length === 0 ? (
-                  <p className="text-sm text-gray-500">No pending orders right now.</p>
+                  <p className="text-xs text-gray-500">No pending orders right now.</p>
                 ) : (
-                  <div className="space-y-3">
+                  <ul className="divide-y divide-gray-100 rounded-md border border-gray-100">
                     {pendingOrders.map((order) => (
-                      <div
+                      <li
                         key={order.id}
-                        className="rounded-xl border border-gray-100 bg-gray-50/50 p-4 transition-colors hover:bg-white"
+                        className="flex flex-wrap items-center justify-between gap-2 px-3 py-2.5 hover:bg-gray-50/70"
                       >
-                        <p className="font-medium text-gray-900">{order.materialTitle || 'Material order'}</p>
-                        <p className="mt-1 text-sm text-gray-600">{formatRWF(order.totalAmount || 0)}</p>
-                        <div className="mt-3 flex flex-wrap gap-2">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium text-gray-900">
+                            {order.materialTitle || 'Material order'}
+                          </p>
+                          <p className="text-xs tabular-nums text-gray-500">{formatRWF(order.totalAmount || 0)}</p>
+                        </div>
+                        <div className="flex shrink-0 gap-1.5">
                           <button
                             type="button"
                             onClick={() => handleOrderAction(order.id, 'Accepted')}
-                            className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700"
+                            className="rounded border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-800 hover:bg-emerald-100"
                           >
                             Accept
                           </button>
                           <button
                             type="button"
                             onClick={() => handleOrderAction(order.id, 'Rejected')}
-                            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+                            className="rounded border border-gray-200 px-2 py-0.5 text-[11px] font-medium text-gray-600 hover:bg-gray-50"
                           >
                             Reject
                           </button>
                         </div>
-                      </div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 )}
               </ModernPanel>
 
               <ModernPanel title="Recent listings" subtitle="Latest materials on your storefront.">
                 {materials.length === 0 ? (
-                  <p className="text-sm text-gray-500">No listings yet. Add your first listing to get started.</p>
+                  <AdminEmptyState
+                    title="No listings yet"
+                    description={
+                      <>
+                        <Link to="/seller/materials/add" className="font-medium text-emerald-700 hover:underline">
+                          Add your first listing
+                        </Link>{' '}
+                        to get started.
+                      </>
+                    }
+                  />
                 ) : (
-                  <ul className="divide-y divide-gray-100 rounded-xl border border-gray-100">
+                  <ul className="divide-y divide-gray-100 rounded-md border border-gray-100">
                     {materials.slice(0, 5).map((material) => (
                       <li
                         key={material.id}
-                        className="flex items-center justify-between gap-3 px-4 py-3 text-sm hover:bg-gray-50/80"
+                        className="flex items-center justify-between gap-3 px-3 py-2 text-sm hover:bg-gray-50/70"
                       >
-                        <span className="font-medium text-gray-900">{material.title || 'Untitled'}</span>
-                        <span className="shrink-0 font-medium text-emerald-700">{formatRWF(material.unitPrice || 0)}</span>
+                        <span className="truncate font-medium text-gray-900">{material.title || 'Untitled'}</span>
+                        <span className="shrink-0 text-xs tabular-nums font-medium text-emerald-700">
+                          {formatRWF(material.unitPrice || 0)}
+                        </span>
                       </li>
                     ))}
                   </ul>
