@@ -12,7 +12,6 @@ import { useOrders } from '../../hooks/useOrders';
 import { formatRWF } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/formatDate';
 import { Eye, X, MessageSquare, ChevronDown, Package, Clock, Truck, CheckCircle, XCircle, Activity } from 'lucide-react';
-import toast from 'react-hot-toast';
 import { exportToPDF, exportToExcel } from '../../utils/exportUtils';
 
 const TABS = [

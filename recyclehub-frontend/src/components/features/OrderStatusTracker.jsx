@@ -15,7 +15,6 @@ export default function OrderStatusTracker({ status, history = [], className = '
       {STEPS.map((step, i) => {
         const done = i < currentStep;
         const current = i === currentStep;
-        const future = i > currentStep;
         const log = history.find((h) => h.status === step);
         
         return (
