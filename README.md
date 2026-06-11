@@ -1,6 +1,10 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0a2e1a,50:1a5c2e,100:2d8653&height=200&section=header&text=RecycleHub&fontSize=72&fontColor=ffffff&fontAlignY=38&desc=Where%20recycled%20materials%20meet%20real%20business.&descSize=18&descAlignY=60&descColor=a8d5b5&animation=fadeIn" width="100%"/>
+<br/>
+
+# RecycleHub
+
+**Where recycled materials meet real business.**
 
 <br/>
 
@@ -352,9 +356,5 @@ npm start
 <div align="center">
 
 Built with ♻️ for a circular economy
-
-<br/>
-
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0a2e1a,50:1a5c2e,100:2d8653&height=100&section=footer&animation=fadeIn" width="100%"/>
 
 </div>
