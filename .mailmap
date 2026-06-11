@@ -1,5 +1,10 @@
 # Canonical author spellings and real emails for GitHub contribution attribution.
 # https://git-scm.com/docs/gitmailmap
+#
+# Re-attribute Cursor agent trailers (Co-authored-by / Made-with) to project owner.
+UwizeyeMagnifique <uwizeyemagnifique@gmail.com> Cursor <cursoragent@cursor.com>
+UwizeyeMagnifique <uwizeyemagnifique@gmail.com> Cursor Agent <cursoragent@cursor.com>
+#
 UwizeyeMagnifique <uwizeyemagnifique@gmail.com> UwiizeyeMagnifique <uwizeyemagnifique@gmail.com>
 Welvarine <guwera04@gmail.com> Welvarine <Welvarine182754559+Welvarine@users.noreply.github.com>
 Belise201 <inezabelyse984@gmail.com> Belise201 <Belise201191963151+Belise201@users.noreply.github.com>
