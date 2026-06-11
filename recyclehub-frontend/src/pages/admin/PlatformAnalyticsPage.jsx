@@ -1,18 +1,35 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { BarChart3, ShoppingCart, Wallet } from 'lucide-react';
 import AdminLayout from '../../layouts/AdminLayout';
 import ModernPageHeader from '../../components/ui/ModernPageHeader';
-import DashboardStatCard from '../../components/ui/DashboardStatCard';
+import ModernPanel from '../../components/ui/ModernPanel';
 import PageLoadingCard from '../../components/ui/PageLoadingCard';
+import AdminStatStrip from '../../components/admin/AdminStatStrip';
+import DistributionMosaic from '../../components/admin/DistributionMosaic';
 import { getAllOrders } from '../../api/orders.api';
 import { getAllPayments } from '../../api/payments.api';
 import { formatRWF } from '../../utils/formatCurrency';
 import { summarizePlatformAnalytics } from '../../utils/gemini';
 import { exportToPDF, exportToExcel } from '../../utils/exportUtils';
 import { formatDate } from '../../utils/formatDate';
-import SimpleBarChart from '../../components/ui/SimpleBarChart';
 
 const SAMPLE_PAGE_SIZE = 500;
+
+const ORDER_COLORS = {
+  Pending: '#d97706',
+  Accepted: '#059669',
+  Cancelled: '#64748b',
+  Delivered: '#047857',
+  Shipped: '#2563eb',
+  Paid: '#6d28d9',
+  AwaitingPayment: '#dc2626',
+};
+
+const PAYMENT_COLORS = {
+  Requested: '#0369a1',
+  Failed: '#dc2626',
+  Successful: '#059669',
+  Completed: '#047857',
+};
 
 function countByKey(items, getKey) {
   const map = {};
@@ -119,8 +136,6 @@ export default function PlatformAnalyticsPage() {
 
   useEffect(() => {
     if (loading) return;
-    const okPay = successfulPayments;
-    const rev = revenue;
     let cancelled = false;
     (async () => {
       setInsightLoading(true);
@@ -128,8 +143,8 @@ export default function PlatformAnalyticsPage() {
       try {
         const text = await summarizePlatformAnalytics({
           orderCount: filteredOrders.length,
-          successfulPaymentsCount: okPay.length,
-          revenueFormatted: formatRWF(rev),
+          successfulPaymentsCount: successfulPayments.length,
+          revenueFormatted: formatRWF(revenue),
         });
         if (!cancelled) setInsight(text);
       } finally {
@@ -165,24 +180,24 @@ export default function PlatformAnalyticsPage() {
 
   return (
     <AdminLayout>
-      <div className="w-full space-y-8">
+      <div className="w-full space-y-4">
         <ModernPageHeader
           title="Platform analytics"
-          description="Orders and payments sample with optional date filters and exports."
+          description={`Sample of up to ${SAMPLE_PAGE_SIZE} orders and payments. Apply date filters to narrow the view.`}
           actions={
             !loading ? (
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => runExport('pdf')}
-                  className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
                 >
                   Export PDF
                 </button>
                 <button
                   type="button"
                   onClick={() => runExport('excel')}
-                  className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800 hover:bg-emerald-100"
+                  className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-800 hover:bg-emerald-100"
                 >
                   Export Excel
                 </button>
@@ -192,23 +207,23 @@ export default function PlatformAnalyticsPage() {
         />
 
         {!loading && (
-          <div className="flex flex-wrap items-end gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+          <div className="flex flex-wrap items-end gap-3 rounded-lg border border-gray-200 bg-white p-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500">From date</label>
+              <label className="block text-[10px] font-medium uppercase tracking-wide text-gray-500">From</label>
               <input
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                className="mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                className="mt-1 rounded-md border border-gray-200 px-2 py-1.5 text-sm"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500">To date</label>
+              <label className="block text-[10px] font-medium uppercase tracking-wide text-gray-500">To</label>
               <input
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                className="mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                className="mt-1 rounded-md border border-gray-200 px-2 py-1.5 text-sm"
               />
             </div>
             <button
@@ -217,109 +232,95 @@ export default function PlatformAnalyticsPage() {
                 setDateFrom('');
                 setDateTo('');
               }}
-              className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
+              className="rounded-md border border-gray-200 px-2.5 py-1.5 text-xs text-gray-600 hover:bg-gray-50"
             >
               Clear filters
             </button>
-            <p className="text-xs text-gray-500 sm:ml-auto max-w-md">
-              Filters apply to the loaded sample (up to {SAMPLE_PAGE_SIZE} orders / payments). Charts and totals update
-              accordingly.
-            </p>
           </div>
         )}
 
         {loading && <PageLoadingCard message="Loading analytics…" />}
+
         {!loading && (
           <>
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-              <DashboardStatCard
-                icon={ShoppingCart}
-                label="Orders (filtered sample)"
-                value={String(filteredOrders.length)}
-                badge="Dataset"
-                tone="emerald"
-              />
-              <DashboardStatCard
-                icon={Wallet}
-                label="Successful payments (filtered)"
-                value={String(successfulPayments.length)}
-                badge="Settled"
-                tone="blue"
-              />
-              <DashboardStatCard
-                icon={BarChart3}
-                label="Revenue (filtered)"
-                value={formatRWF(revenue)}
-                badge="RWF"
-                tone="violet"
-              />
+            <AdminStatStrip
+              items={[
+                { label: 'Orders in sample', value: filteredOrders.length },
+                { label: 'Successful payments', value: successfulPayments.length },
+                { label: 'Revenue', value: formatRWF(revenue), hint: 'Settled only' },
+              ]}
+            />
+
+            <div className="grid gap-4 lg:grid-cols-2">
+              <ModernPanel title="Orders by status" subtitle="Proportional tile view">
+                <DistributionMosaic data={orderStatusChart} colorMap={ORDER_COLORS} />
+              </ModernPanel>
+              <ModernPanel title="Payments by status" subtitle="Proportional tile view">
+                <DistributionMosaic data={paymentStatusChart} colorMap={PAYMENT_COLORS} />
+              </ModernPanel>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-2">
-              <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-                <h2 className="mb-4 text-sm font-semibold text-gray-900">Orders by status</h2>
-                <SimpleBarChart data={orderStatusChart} dataKey="count" nameKey="name" />
+            <ModernPanel title="Sample orders" subtitle="First 15 rows from filtered sample">
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-100 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+                      <th className="py-2 pr-4">Order</th>
+                      <th className="py-2 pr-4">Date</th>
+                      <th className="py-2 pr-4">Material</th>
+                      <th className="py-2 pr-4">Status</th>
+                      <th className="py-2 text-right">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {filteredOrders.slice(0, 15).map((o) => {
+                      const id = o.orderId ?? o.OrderId ?? o.id;
+                      const title = o.materialTitle ?? o.MaterialTitle ?? '—';
+                      const st = o.status ?? o.Status ?? '—';
+                      const amt = o.totalAmount ?? o.TotalAmount ?? 0;
+                      const dt = orderDateValue(o);
+                      return (
+                        <tr key={id} className="text-gray-800">
+                          <td className="py-1.5 pr-4 font-medium text-gray-900">#{id}</td>
+                          <td className="py-1.5 pr-4 text-gray-600">{dt ? formatDate(dt.toISOString()) : '—'}</td>
+                          <td className="max-w-[12rem] truncate py-1.5 pr-4">{title}</td>
+                          <td className="py-1.5 pr-4">
+                            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[11px] font-medium text-gray-700">
+                              {st}
+                            </span>
+                          </td>
+                          <td className="py-1.5 text-right tabular-nums">{formatRWF(amt)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
-              <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-                <h2 className="mb-4 text-sm font-semibold text-gray-900">Payments by status</h2>
-                <SimpleBarChart data={paymentStatusChart} dataKey="count" nameKey="name" barClassName="bg-teal-600" />
-              </div>
-            </div>
-
-            <div className="overflow-x-auto rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-              <h2 className="text-sm font-semibold text-gray-900 mb-3">Sample orders (table)</h2>
-              <table className="min-w-full text-sm text-left">
-                <thead>
-                  <tr className="border-b border-gray-100 text-gray-500">
-                    <th className="py-2 pr-4">Order</th>
-                    <th className="py-2 pr-4">Date</th>
-                    <th className="py-2 pr-4">Material</th>
-                    <th className="py-2 pr-4">Status</th>
-                    <th className="py-2 text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {filteredOrders.slice(0, 15).map((o) => {
-                    const id = o.orderId ?? o.OrderId ?? o.id;
-                    const title = o.materialTitle ?? o.MaterialTitle ?? '—';
-                    const st = o.status ?? o.Status ?? '—';
-                    const amt = o.totalAmount ?? o.TotalAmount ?? 0;
-                    const dt = orderDateValue(o);
-                    return (
-                      <tr key={id}>
-                        <td className="py-2 pr-4 font-medium text-gray-900">#{id}</td>
-                        <td className="py-2 pr-4 text-gray-600">{dt ? formatDate(dt.toISOString()) : '—'}</td>
-                        <td className="py-2 pr-4 text-gray-800 max-w-[12rem] truncate">{title}</td>
-                        <td className="py-2 pr-4">{st}</td>
-                        <td className="py-2 text-right">{formatRWF(amt)}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
               {filteredOrders.length === 0 && (
-                <p className="text-sm text-gray-500 py-4">No orders in this sample for the selected filters.</p>
+                <p className="py-3 text-xs text-gray-500">No orders in this sample for the selected filters.</p>
               )}
               {filteredOrders.length > 15 && (
-                <p className="text-xs text-gray-400 mt-2">Showing 15 of {filteredOrders.length} loaded orders.</p>
+                <p className="mt-2 text-[11px] text-gray-400">
+                  Showing 15 of {filteredOrders.length} loaded orders.
+                </p>
               )}
-            </div>
+            </ModernPanel>
 
-            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-              <h2 className="text-sm font-semibold text-gray-900">Insight (Gemini)</h2>
-              <p className="mt-1 text-xs text-gray-500">
-                Optional summary. Set <code className="rounded bg-gray-100 px-1">VITE_GEMINI_API_KEY</code> in your frontend env
-                to enable.
-              </p>
-              {insightLoading && <p className="mt-3 text-sm text-gray-600">Generating insight…</p>}
-              {!insightLoading && insight && <p className="mt-3 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{insight}</p>}
+            <ModernPanel title="Insight" subtitle="Optional Gemini summary">
+              {insightLoading && <p className="text-xs text-gray-600">Generating insight…</p>}
+              {!insightLoading && insight && (
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">{insight}</p>
+              )}
               {!insightLoading && !insight && !import.meta.env.VITE_GEMINI_API_KEY && (
-                <p className="mt-3 text-sm text-amber-800/90">Add a Gemini API key to see an automated narrative here.</p>
+                <p className="text-xs text-gray-500">
+                  Set <code className="rounded bg-gray-100 px-1">VITE_GEMINI_API_KEY</code> to enable automated
+                  summaries.
+                </p>
               )}
               {!insightLoading && !insight && import.meta.env.VITE_GEMINI_API_KEY && (
-                <p className="mt-3 text-sm text-gray-500">Could not generate insight. Try again later.</p>
+                <p className="text-xs text-gray-500">Could not generate insight. Try again later.</p>
               )}
-            </div>
+            </ModernPanel>
           </>
         )}
       </div>
