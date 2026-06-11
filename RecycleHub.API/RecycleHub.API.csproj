@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>RecycleHub.API</RootNamespace>
     <UserSecretsId>6aebb62c-e6a2-44a3-a16f-e838d25257ad</UserSecretsId>
+    <!-- Avoid globbing local publish/ or _build_* output into Content (prevents MSB3030 and nested copy explosions). -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(MSBuildProjectDirectory)\publish\**;$(MSBuildProjectDirectory)\_build_*\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
