@@ -27,8 +27,6 @@ namespace RecycleHub.API.Data.Configurations
 
             e.HasOne(s => s.VerifiedByAdmin).WithMany()
                 .HasForeignKey(s => s.VerifiedByAdminId).OnDelete(DeleteBehavior.NoAction);
-            e.HasMany(s => s.Materials).WithOne()
-                .HasForeignKey(m => m.SellerUserId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

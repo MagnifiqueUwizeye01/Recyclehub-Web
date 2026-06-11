@@ -25,6 +25,5 @@ namespace RecycleHub.API.Models
         // ── Navigation ────────────────────────────────────────────────────────
         public User User { get; set; } = null!;
         public User? VerifiedByAdmin { get; set; }
-        public ICollection<Material> Materials { get; set; } = new List<Material>();
     }
 }
