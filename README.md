@@ -36,14 +36,6 @@ and mobile-money checkout so every deal is traceable, not a guess.
 and <strong>PawaPay</strong> for MTN MoMo payments in Rwanda.
 </p>
 
-<br/>
-
-[![Why It Exists](https://img.shields.io/badge/Why%20It%20Exists-1a5c2e?style=flat-square)](#why-recyclehub-exists)
-[![What It Does](https://img.shields.io/badge/What%20It%20Does-1a5c2e?style=flat-square)](#what-the-system-does)
-[![Screenshots](https://img.shields.io/badge/Screenshots-2d8653?style=flat-square)](#screenshots)
-[![Architecture](https://img.shields.io/badge/Architecture-1a5c2e?style=flat-square)](#architecture)
-[![Getting Started](https://img.shields.io/badge/Getting%20Started-1a5c2e?style=flat-square)](#run-locally)
-
 </div>
 
 <br/>
@@ -286,20 +278,6 @@ Buyers, sellers, and admins can message each other in-app for order follow-up an
 
 ---
 
-## 𝙿𝚛𝚎𝚛𝚎𝚚𝚞𝚒𝚜𝚒𝚝𝚎𝚜
-
-![.NET](https://img.shields.io/badge/.NET%208%20SDK-512BD4?style=flat-square&logo=dotnet&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js%20LTS-339933?style=flat-square&logo=node.js&logoColor=white)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=flat-square&logo=microsoft-sql-server&logoColor=white)
-
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Node.js](https://nodejs.org/) (LTS) and npm
-- **SQL Server** (LocalDB, Express, or full instance)
-
-<br/>
-
----
-
 ## 𝙲𝚘𝚗𝚏𝚒𝚐𝚞𝚛𝚊𝚝𝚒𝚘𝚗
 
 ### API
@@ -314,34 +292,11 @@ Buyers, sellers, and admins can message each other in-app for order follow-up an
 
 <br/>
 
----
 
-## 𝚁𝚞𝚗 𝙻𝚘𝚌𝚊𝚕𝚕𝚢
-
-**Terminal 1 — API**
-
-```bash
-cd RecycleHub.API
-dotnet run --launch-profile http
-```
-
-**Terminal 2 — Frontend**
-
-```bash
-cd recyclehub-frontend
-npm install
-npm start
-```
-
-> Open **http://127.0.0.1:5173**. Keep both processes running. Swagger is available on the API port when enabled.
-
-<br/>
 
 ---
 
 ## 𝚃𝚎𝚊𝚖 & 𝙲𝚘𝚕𝚕𝚊𝚋𝚘𝚛𝚊𝚝𝚒𝚘𝚗
-
-**Remote:** [github.com/MagnifiqueUwizeye01/Recyclehub](https://github.com/MagnifiqueUwizeye01/Recyclehub)
 
 | GitHub | Role |
 |---|---|
