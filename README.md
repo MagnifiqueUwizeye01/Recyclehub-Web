@@ -36,6 +36,14 @@ and mobile-money checkout so every deal is traceable, not a guess.
 and <strong>PawaPay</strong> for MTN MoMo payments in Rwanda.
 </p>
 
+<br/>
+
+[![Why It Exists](https://img.shields.io/badge/Why%20It%20Exists-1a5c2e?style=flat-square)](#why-recyclehub-exists)
+[![What It Does](https://img.shields.io/badge/What%20It%20Does-1a5c2e?style=flat-square)](#what-the-system-does)
+[![Screenshots](https://img.shields.io/badge/Screenshots-2d8653?style=flat-square)](#screenshots)
+[![Architecture](https://img.shields.io/badge/Architecture-1a5c2e?style=flat-square)](#architecture)
+[![Getting Started](https://img.shields.io/badge/Getting%20Started-1a5c2e?style=flat-square)](#run-locally)
+
 </div>
 
 <br/>
@@ -235,9 +243,11 @@ Buyers, sellers, and admins can message each other in-app for order follow-up an
 ## 𝙰𝚛𝚌𝚑𝚒𝚝𝚎𝚌𝚝𝚞𝚛𝚎
 
 ```
-[ React SPA ]  --HTTPS + JWT-->  [ RecycleHub.API ]  --EF Core-->  [ SQL Server ]
-       ^                                    |
-       +------------ SignalR (notifications) --+
+┌─────────────┐   HTTPS + JWT    ┌─────────────────┐   EF Core   ┌──────────────┐
+│  React SPA  │ ───────────────► │  RecycleHub.API │ ──────────► │  SQL Server  │
+└─────────────┘                  └─────────────────┘             └──────────────┘
+       ▲                                  │
+       └──────────── SignalR (real-time notifications) ──────────┘
 ```
 
 1. **Frontend** — React 19 + Vite, role-based routes (public, buyer, seller, admin, shared).
@@ -347,6 +357,6 @@ npm start
 
 <div align="center">
 
-Built with ♻️ for a circular economy
+Built for a circular economy
 
 </div>
