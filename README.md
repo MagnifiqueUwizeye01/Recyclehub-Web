@@ -36,14 +36,6 @@ and mobile-money checkout so every deal is traceable, not a guess.
 and <strong>PawaPay</strong> for MTN MoMo payments in Rwanda.
 </p>
 
-<br/>
-
-[![Why It Exists](https://img.shields.io/badge/Why%20It%20Exists-1a5c2e?style=flat-square)](#why-recyclehub-exists)
-[![What It Does](https://img.shields.io/badge/What%20It%20Does-1a5c2e?style=flat-square)](#what-the-system-does)
-[![Screenshots](https://img.shields.io/badge/Screenshots-2d8653?style=flat-square)](#screenshots)
-[![Architecture](https://img.shields.io/badge/Architecture-1a5c2e?style=flat-square)](#architecture)
-[![Getting Started](https://img.shields.io/badge/Getting%20Started-1a5c2e?style=flat-square)](#run-locally)
-
 </div>
 
 <br/>
